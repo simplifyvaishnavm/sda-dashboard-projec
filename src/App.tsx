@@ -8,7 +8,8 @@ import {
   Generate, 
   Publish, 
   AdminSettings, 
-  DesignStudio 
+  DesignStudio,
+  AskBenny
 } from '@/components/pages/PlaceholderPages'
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard />
+        return <Dashboard onNavigate={setCurrentPage} />
       case 'master-list':
         return <MasterList />
       case 'collaborate':
@@ -27,12 +28,14 @@ function App() {
         return <Generate />
       case 'publish':
         return <Publish />
+      case 'ask-benny':
+        return <AskBenny />
       case 'admin-settings':
         return <AdminSettings />
       case 'design-studio':
         return <DesignStudio />
       default:
-        return <Dashboard />
+        return <Dashboard onNavigate={setCurrentPage} />
     }
   }
 

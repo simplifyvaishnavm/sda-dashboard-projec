@@ -1,8 +1,60 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plus, FileText, Users, TrendingUp } from '@phosphor-icons/react'
+import { Plus, FileText, Users, TrendingUp, Folders, Sparkle, ShareNetwork, Robot, PaintBrush } from '@phosphor-icons/react'
 
-export function Dashboard() {
+interface DashboardProps {
+  onNavigate?: (page: string) => void
+}
+
+export function Dashboard({ onNavigate }: DashboardProps) {
+  const navigationTiles = [
+    {
+      id: 'master-list',
+      title: 'Manage',
+      description: 'Organize documents',
+      icon: Folders,
+      gradient: 'from-blue-500/20 to-blue-600/20',
+      iconColor: 'text-blue-600',
+      bgHover: 'hover:bg-blue-50'
+    },
+    {
+      id: 'generate',
+      title: 'Generate',
+      description: 'Create with AI',
+      icon: Sparkle,
+      gradient: 'from-purple-500/20 to-purple-600/20',
+      iconColor: 'text-purple-600',
+      bgHover: 'hover:bg-purple-50'
+    },
+    {
+      id: 'publish',
+      title: 'Publish',
+      description: 'Share your work',
+      icon: ShareNetwork,
+      gradient: 'from-green-500/20 to-green-600/20',
+      iconColor: 'text-green-600',
+      bgHover: 'hover:bg-green-50'
+    },
+    {
+      id: 'ask-benny',
+      title: 'Ask Benny',
+      description: 'AI assistant help',
+      icon: Robot,
+      gradient: 'from-orange-500/20 to-orange-600/20',
+      iconColor: 'text-orange-600',
+      bgHover: 'hover:bg-orange-50'
+    },
+    {
+      id: 'collaborate',
+      title: 'Collaborate',
+      description: 'Work together',
+      icon: Users,
+      gradient: 'from-pink-500/20 to-pink-600/20',
+      iconColor: 'text-pink-600',
+      bgHover: 'hover:bg-pink-50'
+    }
+  ]
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -14,6 +66,28 @@ export function Dashboard() {
           <Plus size={16} />
           New Document
         </Button>
+      </div>
+
+      {/* Quick Navigation Tiles */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {navigationTiles.map((tile) => {
+          const IconComponent = tile.icon
+          return (
+            <Card 
+              key={tile.id}
+              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${tile.bgHover} group`}
+              onClick={() => onNavigate?.(tile.id)}
+            >
+              <CardContent className="p-6 text-center">
+                <div className={`w-12 h-12 mx-auto mb-3 rounded-lg bg-gradient-to-br ${tile.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                  <IconComponent size={24} className={tile.iconColor} weight="duotone" />
+                </div>
+                <h3 className="font-semibold text-sm mb-1">{tile.title}</h3>
+                <p className="text-xs text-muted-foreground">{tile.description}</p>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
