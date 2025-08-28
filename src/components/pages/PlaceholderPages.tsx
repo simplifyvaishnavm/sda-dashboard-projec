@@ -49,14 +49,7 @@ export function Generate() {
   const [collateralName, setCollateralName] = useState('')
   const [selectedCollaterals, setSelectedCollaterals] = useKV('generate-selected-collaterals', [] as string[])
   
-  // Document grid state with column-specific filters
-  const [columnFilters, setColumnFilters] = useState({
-    name: '',
-    planType: '',
-    egwp: '',
-    folderName: '',
-    folderVersion: ''
-  })
+  // Document grid state - simplified without column filters
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   
@@ -105,22 +98,9 @@ export function Generate() {
     { id: 'H0169030000', name: 'H0169030000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169030000', folderVersion: '2026_0.01' }
   ]
   
-  // Filter and sort documents
+  // Filter and sort documents - simplified without text filters
   const filteredAndSortedDocuments = useMemo(() => {
-    let filtered = documents.filter(doc => {
-      const matchesName = !columnFilters.name || 
-        doc.name.toLowerCase().includes(columnFilters.name.toLowerCase())
-      const matchesPlanType = !columnFilters.planType || 
-        doc.planType.toLowerCase().includes(columnFilters.planType.toLowerCase())
-      const matchesEgwp = !columnFilters.egwp || 
-        doc.egwp.toLowerCase().includes(columnFilters.egwp.toLowerCase())
-      const matchesFolderName = !columnFilters.folderName || 
-        doc.folderName.toLowerCase().includes(columnFilters.folderName.toLowerCase())
-      const matchesFolderVersion = !columnFilters.folderVersion || 
-        doc.folderVersion.toLowerCase().includes(columnFilters.folderVersion.toLowerCase())
-      
-      return matchesName && matchesPlanType && matchesEgwp && matchesFolderName && matchesFolderVersion
-    })
+    let filtered = [...documents] // Start with all documents since no filters
     
     if (sortField) {
       filtered.sort((a, b) => {
@@ -136,7 +116,7 @@ export function Generate() {
     }
     
     return filtered
-  }, [documents, columnFilters, sortField, sortDirection])
+  }, [documents, sortField, sortDirection])
   
   // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedDocuments.length / pageSize)
@@ -144,10 +124,10 @@ export function Generate() {
   const endIndex = startIndex + pageSize
   const currentPageDocuments = filteredAndSortedDocuments.slice(startIndex, endIndex)
   
-  // Reset to page 1 when filters change
+  // Reset to page 1 when sort changes
   useMemo(() => {
     setCurrentPage(1)
-  }, [columnFilters, sortField, sortDirection])
+  }, [sortField, sortDirection])
   
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
@@ -177,26 +157,6 @@ export function Generate() {
       setSortField(field)
       setSortDirection('asc')
     }
-  }
-  
-  const clearFilters = () => {
-    setColumnFilters({
-      name: '',
-      planType: '',
-      egwp: '',
-      folderName: '',
-      folderVersion: ''
-    })
-    setSortField(null)
-    setSortDirection('asc')
-    setCurrentPage(1)
-  }
-  
-  const updateColumnFilter = (column: string, value: string) => {
-    setColumnFilters(prev => ({
-      ...prev,
-      [column]: value
-    }))
   }
   
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
@@ -377,18 +337,8 @@ export function Generate() {
                     </Button>
                   </div>
                   
-                  <CardTitle className="text-lg flex items-center justify-between mt-4">
+                  <CardTitle className="text-lg mt-4">
                     Select Documents
-                    <div className="flex items-center gap-2">
-                      {(Object.values(columnFilters).some(filter => filter) || sortField) && (
-                        <Button variant="outline" size="sm" onClick={clearFilters}>
-                          Clear Filters
-                        </Button>
-                      )}
-                      <Button variant="ghost" size="sm">
-                        <X size={16} />
-                      </Button>
-                    </div>
                   </CardTitle>
                 </CardHeader>
                 
@@ -396,7 +346,7 @@ export function Generate() {
                   <div className="border rounded-lg">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-muted/50">
+                        <TableRow className="bg-white">
                           <TableHead className="w-12">
                             <Checkbox
                               checked={isAllVisibleSelected}
@@ -407,88 +357,43 @@ export function Generate() {
                             />
                           </TableHead>
                           <TableHead>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
-                                Document Name
-                                {sortField === 'name' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                                )}
-                              </div>
-                              <Input
-                                placeholder="Filter..."
-                                value={columnFilters.name}
-                                onChange={(e) => updateColumnFilter('name', e.target.value)}
-                                className="h-8 text-xs"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
+                              Document Name
+                              {sortField === 'name' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
                             </div>
                           </TableHead>
                           <TableHead>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
-                                Plan Type
-                                {sortField === 'planType' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                                )}
-                              </div>
-                              <Input
-                                placeholder="Filter..."
-                                value={columnFilters.planType}
-                                onChange={(e) => updateColumnFilter('planType', e.target.value)}
-                                className="h-8 text-xs"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
+                              Plan Type
+                              {sortField === 'planType' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
                             </div>
                           </TableHead>
                           <TableHead>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
-                                EGWP
-                                {sortField === 'egwp' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                                )}
-                              </div>
-                              <Input
-                                placeholder="Filter..."
-                                value={columnFilters.egwp}
-                                onChange={(e) => updateColumnFilter('egwp', e.target.value)}
-                                className="h-8 text-xs"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
+                              EGWP
+                              {sortField === 'egwp' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
                             </div>
                           </TableHead>
                           <TableHead>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
-                                Folder Name
-                                {sortField === 'folderName' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                                )}
-                              </div>
-                              <Input
-                                placeholder="Filter..."
-                                value={columnFilters.folderName}
-                                onChange={(e) => updateColumnFilter('folderName', e.target.value)}
-                                className="h-8 text-xs"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
+                              Folder Name
+                              {sortField === 'folderName' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
                             </div>
                           </TableHead>
                           <TableHead>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
-                                Folder Version Number
-                                {sortField === 'folderVersion' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                                )}
-                              </div>
-                              <Input
-                                placeholder="Filter..."
-                                value={columnFilters.folderVersion}
-                                onChange={(e) => updateColumnFilter('folderVersion', e.target.value)}
-                                className="h-8 text-xs"
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
+                              Folder Version Number
+                              {sortField === 'folderVersion' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
                             </div>
                           </TableHead>
                         </TableRow>
@@ -497,7 +402,7 @@ export function Generate() {
                         {currentPageDocuments.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                              No documents match your filter criteria
+                              No documents available
                             </TableCell>
                           </TableRow>
                         ) : (
