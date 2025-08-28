@@ -11,7 +11,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     {
       id: 'master-list',
       title: 'Manage',
-      description: 'Organize documents',
+      description: 'Manage collateral content',
       icon: Folders,
       gradient: 'from-blue-500/20 to-blue-600/20',
       iconColor: 'text-blue-600',
@@ -20,7 +20,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     {
       id: 'generate',
       title: 'Generate',
-      description: 'Create with AI',
+      description: 'Generate PDF documents',
       icon: Sparkle,
       gradient: 'from-purple-500/20 to-purple-600/20',
       iconColor: 'text-purple-600',
@@ -29,7 +29,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     {
       id: 'publish',
       title: 'Publish',
-      description: 'Share your work',
+      description: 'Publish content to portal',
       icon: ShareNetwork,
       gradient: 'from-green-500/20 to-green-600/20',
       iconColor: 'text-green-600',
