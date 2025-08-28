@@ -473,20 +473,20 @@ function QueuedCollateral() {
   const isSomeVisibleSelected = currentPageData.some(item => selectedRows.includes(item.id))
   
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header with View Filters */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h2 className="text-lg font-semibold">Collaterals Queued</h2>
+          <h2 className="text-xl font-semibold text-foreground">Collaterals Queued</h2>
         </div>
-        <div className="flex items-center gap-6 text-sm">
+        <div className="flex items-center gap-8 text-sm">
           <div className="flex items-center gap-2">
             <Checkbox
               id="view-user-generated-released"
               checked={viewFilters.userGeneratedReleased}
               onCheckedChange={() => toggleViewFilter('userGeneratedReleased')}
             />
-            <Label htmlFor="view-user-generated-released" className="cursor-pointer">
+            <Label htmlFor="view-user-generated-released" className="cursor-pointer font-medium">
               View User Generated - Released ML
             </Label>
           </div>
@@ -496,7 +496,7 @@ function QueuedCollateral() {
               checked={viewFilters.userGeneratedInProgress}
               onCheckedChange={() => toggleViewFilter('userGeneratedInProgress')}
             />
-            <Label htmlFor="view-user-generated-progress" className="cursor-pointer">
+            <Label htmlFor="view-user-generated-progress" className="cursor-pointer font-medium">
               View User Generated - In Progress ML
             </Label>
           </div>
@@ -506,7 +506,7 @@ function QueuedCollateral() {
               checked={viewFilters.systemGenerated}
               onCheckedChange={() => toggleViewFilter('systemGenerated')}
             />
-            <Label htmlFor="view-system-generated" className="cursor-pointer">
+            <Label htmlFor="view-system-generated" className="cursor-pointer font-medium">
               View System Generated
             </Label>
           </div>
@@ -514,84 +514,104 @@ function QueuedCollateral() {
       </div>
       
       {/* Actions and Column Controls */}
-      <div className="flex items-center justify-end gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="flex items-center gap-2 h-8">
-              <Columns size={14} />
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            {availableColumns.map((column) => (
-              <DropdownMenuCheckboxItem
-                key={column.key}
-                checked={visibleColumns[column.key]}
-                onCheckedChange={() => toggleColumnVisibility(column.key)}
-              >
-                {column.label}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          {filteredAndSortedData.length} items total
+          {selectedRows.length > 0 && (
+            <Badge variant="secondary" className="ml-3">
+              {selectedRows.length} selected
+            </Badge>
+          )}
+        </div>
         
-        {/* Action buttons with tooltips */}
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Refresh"
-        >
-          <ArrowClockwise size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Requeue Segmented EOC"
-        >
-          <Queue size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Requeue 508 validations"
-        >
-          <ArrowClockwise size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Blk download"
-        >
-          <Download size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Download excel errors"
-        >
-          <WarningCircle size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Upload"
-        >
-          <UploadSimple size={14} />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-8 px-2" 
-          title="Terminate"
-        >
-          <X size={14} />
-        </Button>
+        <div className="flex items-center gap-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="flex items-center gap-2 h-9">
+                <Columns size={16} />
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              {availableColumns.map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.key}
+                  checked={visibleColumns[column.key]}
+                  onCheckedChange={() => toggleColumnVisibility(column.key)}
+                >
+                  {column.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Action buttons with consistent sizing and spacing */}
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Refresh"
+            >
+              <ArrowClockwise size={16} />
+              <span className="hidden md:inline">Refresh</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Requeue Segmented EOC"
+            >
+              <Queue size={16} />
+              <span className="hidden lg:inline">Requeue EOC</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Requeue 508 validations"
+            >
+              <ArrowClockwise size={16} />
+              <span className="hidden lg:inline">508 Validation</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Blk download"
+            >
+              <Download size={16} />
+              <span className="hidden lg:inline">Download</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Download excel errors"
+            >
+              <WarningCircle size={16} />
+              <span className="hidden lg:inline">Errors</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2" 
+              title="Upload"
+            >
+              <UploadSimple size={16} />
+              <span className="hidden md:inline">Upload</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 px-3 flex items-center gap-2 text-destructive hover:text-destructive" 
+              title="Terminate"
+            >
+              <X size={16} />
+              <span className="hidden md:inline">Terminate</span>
+            </Button>
+          </div>
+        </div>
       </div>
       
       {/* Data Grid */}
@@ -601,8 +621,8 @@ function QueuedCollateral() {
             <Table>
               <TableHeader>
                 {/* Column Headers with Sort */}
-                <TableRow className="bg-muted/50">
-                  <TableHead className="w-10 border-r h-10">
+                <TableRow className="bg-muted/30">
+                  <TableHead className="w-12 border-r h-12">
                     <Checkbox
                       checked={isAllVisibleSelected}
                       onCheckedChange={handleSelectAll}
@@ -612,7 +632,7 @@ function QueuedCollateral() {
                     />
                   </TableHead>
                   {visibleColumns.batchId && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[120px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('batchId')}>
                         BatchId
                         {sortField === 'batchId' && (
@@ -622,7 +642,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.source && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[140px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('source')}>
                         Source
                         {sortField === 'source' && (
@@ -632,7 +652,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.mlType && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[100px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('mlType')}>
                         ML Type
                         {sortField === 'mlType' && (
@@ -642,7 +662,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.collateralName && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[150px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('collateralName')}>
                         Collateral Name
                         {sortField === 'collateralName' && (
@@ -652,7 +672,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.fontType && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[100px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('fontType')}>
                         Font Type
                         {sortField === 'fontType' && (
@@ -662,7 +682,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.productName && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[140px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('productName')}>
                         Product Name
                         {sortField === 'productName' && (
@@ -672,7 +692,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.folderName && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[200px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderName')}>
                         Folder Name
                         {sortField === 'folderName' && (
@@ -682,7 +702,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.versionNumber && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[130px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('versionNumber')}>
                         Version Number
                         {sortField === 'versionNumber' && (
@@ -692,7 +712,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.status && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[100px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('status')}>
                         Status
                         {sortField === 'status' && (
@@ -702,7 +722,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.queuedDate && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[160px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedDate')}>
                         Queued Date
                         {sortField === 'queuedDate' && (
@@ -712,7 +732,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.processedDate && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[160px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('processedDate')}>
                         Processed Date
                         {sortField === 'processedDate' && (
@@ -722,7 +742,7 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.userName && (
-                    <TableHead className="border-r h-10">
+                    <TableHead className="border-r h-12 min-w-[140px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('userName')}>
                         UserName
                         {sortField === 'userName' && (
@@ -732,12 +752,12 @@ function QueuedCollateral() {
                     </TableHead>
                   )}
                   {visibleColumns.downloadPdf && (
-                    <TableHead className="border-r h-10 text-center">
+                    <TableHead className="border-r h-12 text-center min-w-[120px]">
                       Download PDF
                     </TableHead>
                   )}
                   {visibleColumns.downloadJson && (
-                    <TableHead className="h-10 text-center">
+                    <TableHead className="h-12 text-center min-w-[120px]">
                       Download ...
                     </TableHead>
                   )}
@@ -745,280 +765,280 @@ function QueuedCollateral() {
 
                 {/* Filter Row */}
                 <TableRow className="bg-white border-b-2">
-                  <TableHead className="p-1 border-r">
+                  <TableHead className="p-2 border-r">
                     {/* Empty cell for checkbox column */}
                   </TableHead>
                   {visibleColumns.batchId && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.batchId}
                           onChange={(e) => updateColumnFilter('batchId', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.batchId && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('batchId')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.source && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.source}
                           onChange={(e) => updateColumnFilter('source', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.source && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('source')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.mlType && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.mlType}
                           onChange={(e) => updateColumnFilter('mlType', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.mlType && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('mlType')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.collateralName && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.collateralName}
                           onChange={(e) => updateColumnFilter('collateralName', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.collateralName && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('collateralName')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.fontType && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.fontType}
                           onChange={(e) => updateColumnFilter('fontType', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.fontType && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('fontType')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.productName && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.productName}
                           onChange={(e) => updateColumnFilter('productName', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.productName && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('productName')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.folderName && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.folderName}
                           onChange={(e) => updateColumnFilter('folderName', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.folderName && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('folderName')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.versionNumber && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.versionNumber}
                           onChange={(e) => updateColumnFilter('versionNumber', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.versionNumber && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('versionNumber')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.status && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.status}
                           onChange={(e) => updateColumnFilter('status', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.status && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('status')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.queuedDate && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.queuedDate}
                           onChange={(e) => updateColumnFilter('queuedDate', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.queuedDate && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('queuedDate')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.processedDate && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.processedDate}
                           onChange={(e) => updateColumnFilter('processedDate', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.processedDate && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('processedDate')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.userName && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       <div className="relative">
-                        <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={columnFilters.userName}
                           onChange={(e) => updateColumnFilter('userName', e.target.value)}
-                          className="pl-7 h-7 text-sm"
+                          className="pl-9 h-8 text-sm"
                         />
                         {columnFilters.userName && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
                             onClick={() => clearColumnFilter('userName')}
                           >
-                            <X size={10} />
+                            <X size={12} />
                           </Button>
                         )}
                       </div>
                     </TableHead>
                   )}
                   {visibleColumns.downloadPdf && (
-                    <TableHead className="p-1 border-r">
+                    <TableHead className="p-2 border-r">
                       {/* Empty for Download PDF column */}
                     </TableHead>
                   )}
                   {visibleColumns.downloadJson && (
-                    <TableHead className="p-1">
+                    <TableHead className="p-2">
                       {/* Empty for Download JSON column */}
                     </TableHead>
                   )}
@@ -1041,10 +1061,10 @@ function QueuedCollateral() {
                       className={`
                         ${selectedRows.includes(item.id) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
                         ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
-                        border-b transition-colors h-9
+                        border-b transition-colors h-11
                       `}
                     >
-                      <TableCell className="border-r p-2">
+                      <TableCell className="border-r p-3">
                         <Checkbox
                           checked={selectedRows.includes(item.id)}
                           onCheckedChange={(checked) => 
@@ -1053,95 +1073,95 @@ function QueuedCollateral() {
                         />
                       </TableCell>
                       {visibleColumns.batchId && (
-                        <TableCell className="font-mono text-blue-600 font-medium border-r p-2 text-sm">
+                        <TableCell className="font-mono text-blue-600 font-medium border-r p-3 text-sm">
                           {item.batchId}
                         </TableCell>
                       )}
                       {visibleColumns.source && (
-                        <TableCell className="border-r p-2 text-sm">
+                        <TableCell className="border-r p-3 text-sm">
                           {item.source || (
                             <span className="text-muted-foreground italic">—</span>
                           )}
                         </TableCell>
                       )}
                       {visibleColumns.mlType && (
-                        <TableCell className="border-r p-2">
-                          <Badge variant="outline" className="text-xs">
+                        <TableCell className="border-r p-3">
+                          <Badge variant="outline" className="text-xs font-medium">
                             {item.mlType}
                           </Badge>
                         </TableCell>
                       )}
                       {visibleColumns.collateralName && (
-                        <TableCell className="border-r p-2 text-sm">
+                        <TableCell className="border-r p-3 text-sm font-medium">
                           {item.collateralName}
                         </TableCell>
                       )}
                       {visibleColumns.fontType && (
-                        <TableCell className="border-r p-2 text-sm">
-                          {item.fontType || (
-                            <span className="text-muted-foreground italic">—</span>
-                          )}
+                        <TableCell className="border-r p-3 text-sm">
+                          <Badge variant="secondary" className="text-xs">
+                            {item.fontType}
+                          </Badge>
                         </TableCell>
                       )}
                       {visibleColumns.productName && (
-                        <TableCell className="border-r p-2 text-sm font-mono">
+                        <TableCell className="border-r p-3 text-sm font-mono">
                           {item.productName}
                         </TableCell>
                       )}
                       {visibleColumns.folderName && (
-                        <TableCell className="border-r p-2 text-sm font-mono max-w-48 truncate" title={item.folderName}>
+                        <TableCell className="border-r p-3 text-sm font-mono max-w-52 truncate" title={item.folderName}>
                           {item.folderName}
                         </TableCell>
                       )}
                       {visibleColumns.versionNumber && (
-                        <TableCell className="border-r p-2">
+                        <TableCell className="border-r p-3">
                           <Badge variant="outline" className="font-mono text-xs">
                             {item.versionNumber}
                           </Badge>
                         </TableCell>
                       )}
                       {visibleColumns.status && (
-                        <TableCell className="border-r p-2">
-                          <Badge variant="default" className="bg-green-100 text-green-800 border-green-300 text-xs">
+                        <TableCell className="border-r p-3">
+                          <Badge variant="default" className="bg-green-100 text-green-800 border-green-300 text-xs font-medium">
                             {item.status}
                           </Badge>
                         </TableCell>
                       )}
                       {visibleColumns.queuedDate && (
-                        <TableCell className="border-r p-2 text-sm font-mono">
+                        <TableCell className="border-r p-3 text-sm font-mono">
                           {item.queuedDate}
                         </TableCell>
                       )}
                       {visibleColumns.processedDate && (
-                        <TableCell className="border-r p-2 text-sm font-mono">
+                        <TableCell className="border-r p-3 text-sm font-mono">
                           {item.processedDate}
                         </TableCell>
                       )}
                       {visibleColumns.userName && (
-                        <TableCell className="border-r p-2 text-sm">
+                        <TableCell className="border-r p-3 text-sm font-medium">
                           {item.userName}
                         </TableCell>
                       )}
                       {visibleColumns.downloadPdf && (
-                        <TableCell className="border-r p-2 text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-600">
-                              <Download size={14} />
+                        <TableCell className="border-r p-3 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-600 hover:bg-red-50" title="Download PDF">
+                              <Download size={16} />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-orange-600">
-                              <Download size={14} />
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-orange-600 hover:bg-orange-50" title="Download Alt PDF">
+                              <Download size={16} />
                             </Button>
                           </div>
                         </TableCell>
                       )}
                       {visibleColumns.downloadJson && (
-                        <TableCell className="p-2 text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-blue-600">
-                              <Download size={14} />
+                        <TableCell className="p-3 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="Download JSON">
+                              <Download size={16} />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-600">
-                              <Download size={14} />
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-600 hover:bg-gray-50" title="Download Other">
+                              <Download size={16} />
                             </Button>
                           </div>
                         </TableCell>
@@ -1154,37 +1174,37 @@ function QueuedCollateral() {
           </div>
           
           {/* Enhanced Pagination Controls */}
-          <div className="flex items-center justify-between mt-3 px-3 pb-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-3">
-              <span>
+          <div className="flex items-center justify-between mt-4 px-4 pb-4 text-sm text-muted-foreground border-t bg-muted/20">
+            <div className="flex items-center gap-4">
+              <span className="font-medium">
                 Showing {startIndex + 1} - {Math.min(endIndex, filteredAndSortedData.length)} of {filteredAndSortedData.length}
                 {queuedData.length !== filteredAndSortedData.length && (
                   <span className="text-blue-600 font-medium">
                     {' '}(filtered from {queuedData.length} total)
                   </span>
                 )}
-                {selectedRows.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {selectedRows.length} selected
-                  </Badge>
-                )}
               </span>
+              {selectedRows.length > 0 && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  {selectedRows.length} selected
+                </Badge>
+              )}
             </div>
             
             {totalPages > 1 && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="h-7 w-7 p-0"
+                  className="h-8 w-8 p-0"
                 >
-                  <CaretLeft size={12} />
+                  <CaretLeft size={14} />
                 </Button>
                 
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">Page</span>
+                  <span className="text-sm font-medium">Page</span>
                   <Input
                     type="number"
                     min="1"
@@ -1196,9 +1216,9 @@ function QueuedCollateral() {
                         setCurrentPage(page)
                       }
                     }}
-                    className="w-14 h-7 text-center text-sm"
+                    className="w-16 h-8 text-center text-sm font-medium"
                   />
-                  <span className="text-sm">of {totalPages}</span>
+                  <span className="text-sm font-medium">of {totalPages}</span>
                 </div>
                 
                 <Button
@@ -1206,12 +1226,13 @@ function QueuedCollateral() {
                   size="sm"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="h-7 w-7 p-0"
+                  className="h-8 w-8 p-0"
                 >
-                  <CaretRight size={12} />
+                  <CaretRight size={14} />
                 </Button>
               </div>
             )}
+          </div>
           </div>
         </CardContent>
       </Card>
