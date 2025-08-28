@@ -3064,20 +3064,468 @@ function LogsTab() {
 }
 
 function UserManagementTab() {
+  const [sortField, setSortField] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [selectedRows, setSelectedRows] = useKV('user-management-selected-rows', [] as string[])
+  
+  // Column filters for search
+  const [columnFilters, setColumnFilters] = useState({
+    name: '',
+    email: '',
+    userGroups: ''
+  })
+  
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useKV('user-management-visible-columns', {
+    name: true,
+    email: true,
+    userGroups: true
+  })
+  
+  // Sample user data based on the screenshot
+  const userData = [
+    {
+      id: '1',
+      name: 'Vaishnavi',
+      email: 'vaishnavi.katamble@simplifyheathcare.com',
+      userGroups: ''
+    },
+    {
+      id: '2',
+      name: 'amol bondre',
+      email: 'amol.bondre@simplifyheathcare.com',
+      userGroups: ''
+    },
+    {
+      id: '3',
+      name: 'Ankita Thakre',
+      email: 'ankita.thakre@simplifyheathcare.com',
+      userGroups: ''
+    },
+    {
+      id: '4',
+      name: 'Chad Carpenter',
+      email: 'Chad.Carpenter@medmutual.com',
+      userGroups: ''
+    },
+    {
+      id: '5',
+      name: 'Chad Carpenter',
+      email: 'Chad.Carpenter@ProMedica.org',
+      userGroups: ''
+    },
+    {
+      id: '6',
+      name: 'Donna Piko',
+      email: 'Donna.Piko@medmutual.com',
+      userGroups: ''
+    },
+    {
+      id: '7',
+      name: 'Elaine Warnecke',
+      email: 'Elaine.Warnecke@medmutual.com',
+      userGroups: 'Product Group,Compliance Group,Legal Group,Marketing Group'
+    },
+    {
+      id: '8',
+      name: 'Holly Murray',
+      email: 'Holly.Murray@medmutual.com',
+      userGroups: ''
+    },
+    {
+      id: '9',
+      name: 'Lauryn Bledsoe',
+      email: 'Lauryn.Bledsoe@medmutual.com',
+      userGroups: ''
+    },
+    {
+      id: '10',
+      name: 'Mary Wachtell',
+      email: 'Mary.Wachtell@medmutual.com',
+      userGroups: ''
+    }
+  ]
+  
+  // Available columns configuration
+  const availableColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'email', label: 'Email' },
+    { key: 'userGroups', label: 'User Groups' }
+  ]
+  
+  // Filter and sort data
+  const filteredAndSortedData = useMemo(() => {
+    let filtered = userData.filter(item => {
+      // Apply column filters
+      if (columnFilters.name && !item.name.toLowerCase().includes(columnFilters.name.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.email && !item.email.toLowerCase().includes(columnFilters.email.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.userGroups && !item.userGroups.toLowerCase().includes(columnFilters.userGroups.toLowerCase())) {
+        return false
+      }
+      
+      return true
+    })
+    
+    if (sortField) {
+      filtered.sort((a, b) => {
+        const aValue = a[sortField as keyof typeof a] || ''
+        const bValue = b[sortField as keyof typeof b] || ''
+        
+        if (sortDirection === 'asc') {
+          return aValue.toString().localeCompare(bValue.toString())
+        } else {
+          return bValue.toString().localeCompare(aValue.toString())
+        }
+      })
+    }
+    
+    return filtered
+  }, [userData, sortField, sortDirection, columnFilters])
+  
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredAndSortedData.length / pageSize)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
+  
+  // Reset to page 1 when sort or filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [sortField, sortDirection, columnFilters])
+  
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+  
+  const handleRowSelect = (rowId: string, checked: boolean) => {
+    setSelectedRows((current: string[]) => 
+      checked ? [...current, rowId] : current.filter(id => id !== rowId)
+    )
+  }
+  
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allVisibleIds = currentPageData.map(item => item.id)
+      setSelectedRows((current: string[]) => {
+        const newSet = new Set([...current, ...allVisibleIds])
+        return Array.from(newSet)
+      })
+    } else {
+      const visibleIds = new Set(currentPageData.map(item => item.id))
+      setSelectedRows((current: string[]) => 
+        current.filter(id => !visibleIds.has(id))
+      )
+    }
+  }
+  
+  const updateColumnFilter = (column: string, value: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: value
+    }))
+  }
+  
+  const clearColumnFilter = (column: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: ''
+    }))
+  }
+  
+  const toggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns((current: any) => ({
+      ...current,
+      [columnKey]: !current[columnKey]
+    }))
+  }
+  
+  const isAllVisibleSelected = currentPageData.length > 0 && 
+    currentPageData.every(item => selectedRows.includes(item.id))
+  
+  const isSomeVisibleSelected = currentPageData.some(item => selectedRows.includes(item.id))
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>User Management</CardTitle>
-        <CardDescription>
-          Manage user accounts, permissions, and access levels
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">
-          User management interface will be implemented here.
-        </p>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      {/* Header with Total Count and Action Buttons */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Total</span>
+          <span className="text-sm font-semibold text-primary">{filteredAndSortedData.length} Users</span>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10" title="Delete User">
+            <X size={16} />
+          </Button>
+          
+          <Button variant="outline" size="sm" className="h-9">
+            Manage User Groups
+          </Button>
+          
+          <Button className="h-9">
+            Add/Edit User
+          </Button>
+        </div>
+      </div>
+      
+      {/* Data Grid */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="border rounded-lg">
+            <Table>
+              <TableHeader>
+                {/* Column Headers with Sort */}
+                <TableRow className="bg-muted/30">
+                  <TableHead className="w-12 border-r h-12">
+                    <Checkbox
+                      checked={isAllVisibleSelected}
+                      onCheckedChange={handleSelectAll}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isSomeVisibleSelected && !isAllVisibleSelected
+                      }}
+                    />
+                  </TableHead>
+                  {visibleColumns.name && (
+                    <TableHead className="border-r h-12 min-w-[200px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('name')}>
+                        Name
+                        {sortField === 'name' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.email && (
+                    <TableHead className="border-r h-12 min-w-[300px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('email')}>
+                        Email
+                        {sortField === 'email' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.userGroups && (
+                    <TableHead className="h-12 min-w-[400px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('userGroups')}>
+                        User Groups
+                        {sortField === 'userGroups' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                </TableRow>
+
+                {/* Filter Row */}
+                <TableRow className="bg-white border-b-2">
+                  <TableHead className="p-2 border-r">
+                    {/* Empty cell for checkbox column */}
+                  </TableHead>
+                  {visibleColumns.name && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.name}
+                          onChange={(e) => updateColumnFilter('name', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.name && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('name')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.email && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.email}
+                          onChange={(e) => updateColumnFilter('email', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.email && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('email')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.userGroups && (
+                    <TableHead className="p-2">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.userGroups}
+                          onChange={(e) => updateColumnFilter('userGroups', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.userGroups && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('userGroups')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentPageData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-8 text-muted-foreground">
+                      {Object.values(columnFilters).some(filter => filter !== '') 
+                        ? "No users match the current filters" 
+                        : "No users available"
+                      }
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  currentPageData.map((user, index) => (
+                    <TableRow 
+                      key={user.id} 
+                      className={`
+                        ${selectedRows.includes(user.id) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
+                        ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
+                        border-b transition-colors h-12
+                      `}
+                    >
+                      <TableCell className="border-r p-3">
+                        <Checkbox
+                          checked={selectedRows.includes(user.id)}
+                          onCheckedChange={(checked) => 
+                            handleRowSelect(user.id, checked as boolean)
+                          }
+                        />
+                      </TableCell>
+                      {visibleColumns.name && (
+                        <TableCell className="border-r p-3 text-sm font-medium">
+                          {user.name}
+                        </TableCell>
+                      )}
+                      {visibleColumns.email && (
+                        <TableCell className="border-r p-3 text-sm text-blue-600">
+                          {user.email}
+                        </TableCell>
+                      )}
+                      {visibleColumns.userGroups && (
+                        <TableCell className="p-3 text-sm">
+                          {user.userGroups ? (
+                            <div className="flex flex-wrap gap-1">
+                              {user.userGroups.split(',').map((group, idx) => (
+                                <Badge 
+                                  key={idx} 
+                                  variant="outline" 
+                                  className="text-xs font-medium"
+                                >
+                                  {group.trim()}
+                                </Badge>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground italic">—</span>
+                          )}
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          
+          {/* Enhanced Pagination Controls */}
+          <div className="flex items-center justify-between mt-4 px-4 pb-4 text-sm text-muted-foreground border-t bg-muted/20">
+            <div className="flex items-center gap-4">
+              <span className="font-medium">Page Size</span>
+              <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(parseInt(value))}>
+                <SelectTrigger className="w-16 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="font-medium">
+                1 to 10 of {filteredAndSortedData.length}
+              </span>
+            </div>
+            
+            {totalPages > 1 && (
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8 p-0"
+                >
+                  <CaretLeft size={14} />
+                </Button>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Page 1 of 3</span>
+                </div>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8 p-0"
+                >
+                  <CaretRight size={14} />
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 px-3 text-sm"
+                >
+                  »
+                </Button>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
