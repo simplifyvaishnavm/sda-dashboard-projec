@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, FloppyDisk, UploadSimple, Stop } from "@phosphor-icons/react"
 
 // QueuedCollateral component implementation
 function QueuedCollateral() {
@@ -535,21 +535,62 @@ function QueuedCollateral() {
           </DropdownMenuContent>
         </DropdownMenu>
         
-        {/* Action buttons */}
-        <Button variant="outline" size="sm" className="h-8">
-          <Gear size={14} className="mr-1" />
+        {/* Action buttons with tooltips */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Refresh"
+        >
+          <ArrowClockwise size={14} />
         </Button>
-        <Button variant="outline" size="sm" className="h-8">
-          <ArrowDown size={14} className="mr-1" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Requeue Segmented EOC"
+        >
+          <Queue size={14} />
         </Button>
-        <Button variant="outline" size="sm" className="h-8">
-          <ArrowUp size={14} className="mr-1" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Requeue 508 validations"
+        >
+          <ArrowClockwise size={14} />
         </Button>
-        <Button variant="outline" size="sm" className="h-8">
-          <X size={14} className="mr-1" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Blk download"
+        >
+          <Download size={14} />
         </Button>
-        <Button variant="outline" size="sm" className="h-8">
-          <Eye size={14} className="mr-1" />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Download excel errors"
+        >
+          <FloppyDisk size={14} />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Upload"
+        >
+          <UploadSimple size={14} />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8 px-2" 
+          title="Terminate"
+        >
+          <Stop size={14} />
         </Button>
       </div>
       
