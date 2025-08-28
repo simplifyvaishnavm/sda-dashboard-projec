@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Clock, BarChart3, X, MagnifyingGlass, FunnelSimple, SortAscending, SortDescending, CaretUp, CaretDown, CaretLeft, CaretRight, CaretDoubleLeft, CaretDoubleRight } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight } from "@phosphor-icons/react"
 
 export function MasterList() {
   return (
@@ -49,8 +49,14 @@ export function Generate() {
   const [collateralName, setCollateralName] = useState('')
   const [selectedCollaterals, setSelectedCollaterals] = useKV('generate-selected-collaterals', [] as string[])
   
-  // Document grid state
-  const [searchTerm, setSearchTerm] = useState('')
+  // Document grid state with column-specific filters
+  const [columnFilters, setColumnFilters] = useState({
+    name: '',
+    planType: '',
+    egwp: '',
+    folderName: '',
+    folderVersion: ''
+  })
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   
@@ -102,12 +108,18 @@ export function Generate() {
   // Filter and sort documents
   const filteredAndSortedDocuments = useMemo(() => {
     let filtered = documents.filter(doc => {
-      const matchesSearch = !searchTerm || 
-        doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.folderName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.planType.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesName = !columnFilters.name || 
+        doc.name.toLowerCase().includes(columnFilters.name.toLowerCase())
+      const matchesPlanType = !columnFilters.planType || 
+        doc.planType.toLowerCase().includes(columnFilters.planType.toLowerCase())
+      const matchesEgwp = !columnFilters.egwp || 
+        doc.egwp.toLowerCase().includes(columnFilters.egwp.toLowerCase())
+      const matchesFolderName = !columnFilters.folderName || 
+        doc.folderName.toLowerCase().includes(columnFilters.folderName.toLowerCase())
+      const matchesFolderVersion = !columnFilters.folderVersion || 
+        doc.folderVersion.toLowerCase().includes(columnFilters.folderVersion.toLowerCase())
       
-      return matchesSearch
+      return matchesName && matchesPlanType && matchesEgwp && matchesFolderName && matchesFolderVersion
     })
     
     if (sortField) {
@@ -124,7 +136,7 @@ export function Generate() {
     }
     
     return filtered
-  }, [documents, searchTerm, sortField, sortDirection])
+  }, [documents, columnFilters, sortField, sortDirection])
   
   // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedDocuments.length / pageSize)
@@ -135,7 +147,7 @@ export function Generate() {
   // Reset to page 1 when filters change
   useMemo(() => {
     setCurrentPage(1)
-  }, [searchTerm, sortField, sortDirection])
+  }, [columnFilters, sortField, sortDirection])
   
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
@@ -168,10 +180,23 @@ export function Generate() {
   }
   
   const clearFilters = () => {
-    setSearchTerm('')
+    setColumnFilters({
+      name: '',
+      planType: '',
+      egwp: '',
+      folderName: '',
+      folderVersion: ''
+    })
     setSortField(null)
     setSortDirection('asc')
     setCurrentPage(1)
+  }
+  
+  const updateColumnFilter = (column: string, value: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: value
+    }))
   }
   
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
@@ -355,7 +380,7 @@ export function Generate() {
                   <CardTitle className="text-lg flex items-center justify-between mt-4">
                     Select Documents
                     <div className="flex items-center gap-2">
-                      {(searchTerm || sortField) && (
+                      {(Object.values(columnFilters).some(filter => filter) || sortField) && (
                         <Button variant="outline" size="sm" onClick={clearFilters}>
                           Clear Filters
                         </Button>
@@ -368,73 +393,6 @@ export function Generate() {
                 </CardHeader>
                 
                 <CardContent>
-                  {/* Search and Filters */}
-                  <div className="space-y-4 mb-4">
-                    {/* Search Bar */}
-                    <div className="relative">
-                      <MagnifyingGlass className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search documents, folder names, or plan types..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                    
-                    {/* Filter Row */}
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <FunnelSimple size={16} className="text-muted-foreground" />
-                        <span className="text-sm font-medium">Filters:</span>
-                      </div>
-                    </div>
-                    
-                    {/* Results Summary and Page Size Control */}
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <div className="flex items-center gap-4">
-                        <span>
-                          Showing {startIndex + 1}-{Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length} documents
-                          {selectedDocuments.length > 0 && (
-                            <Badge variant="secondary" className="ml-2">
-                              {selectedDocuments.length} selected
-                            </Badge>
-                          )}
-                        </span>
-                        
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs">Show:</span>
-                          <Select value={pageSize.toString()} onValueChange={(value) => {
-                            setPageSize(Number(value))
-                            setCurrentPage(1)
-                          }}>
-                            <SelectTrigger className="w-20 h-8">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="10">10</SelectItem>
-                              <SelectItem value="25">25</SelectItem>
-                              <SelectItem value="50">50</SelectItem>
-                              <SelectItem value="100">100</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        {sortField && (
-                          <div className="flex items-center gap-1">
-                            <span>Sorted by {sortField}</span>
-                            {sortDirection === 'asc' ? (
-                              <SortAscending size={14} />
-                            ) : (
-                              <SortDescending size={14} />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
                   <div className="border rounded-lg">
                     <Table>
                       <TableHeader>
@@ -448,44 +406,89 @@ export function Generate() {
                               }}
                             />
                           </TableHead>
-                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('name')}>
-                            <div className="flex items-center gap-1">
-                              Document Name
-                              {sortField === 'name' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
+                          <TableHead>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
+                                Document Name
+                                {sortField === 'name' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                              <Input
+                                placeholder="Filter..."
+                                value={columnFilters.name}
+                                onChange={(e) => updateColumnFilter('name', e.target.value)}
+                                className="h-8 text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </TableHead>
-                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('planType')}>
-                            <div className="flex items-center gap-1">
-                              Plan Type
-                              {sortField === 'planType' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
+                          <TableHead>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
+                                Plan Type
+                                {sortField === 'planType' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                              <Input
+                                placeholder="Filter..."
+                                value={columnFilters.planType}
+                                onChange={(e) => updateColumnFilter('planType', e.target.value)}
+                                className="h-8 text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </TableHead>
-                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('egwp')}>
-                            <div className="flex items-center gap-1">
-                              EGWP
-                              {sortField === 'egwp' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
+                          <TableHead>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
+                                EGWP
+                                {sortField === 'egwp' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                              <Input
+                                placeholder="Filter..."
+                                value={columnFilters.egwp}
+                                onChange={(e) => updateColumnFilter('egwp', e.target.value)}
+                                className="h-8 text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </TableHead>
-                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('folderName')}>
-                            <div className="flex items-center gap-1">
-                              Folder Name
-                              {sortField === 'folderName' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
+                          <TableHead>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
+                                Folder Name
+                                {sortField === 'folderName' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                              <Input
+                                placeholder="Filter..."
+                                value={columnFilters.folderName}
+                                onChange={(e) => updateColumnFilter('folderName', e.target.value)}
+                                className="h-8 text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </TableHead>
-                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
-                            <div className="flex items-center gap-1">
-                              Folder Version Number
-                              {sortField === 'folderVersion' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
+                          <TableHead>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
+                                Folder Version Number
+                                {sortField === 'folderVersion' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                              <Input
+                                placeholder="Filter..."
+                                value={columnFilters.folderVersion}
+                                onChange={(e) => updateColumnFilter('folderVersion', e.target.value)}
+                                className="h-8 text-xs"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </TableHead>
                         </TableRow>
@@ -494,7 +497,7 @@ export function Generate() {
                         {currentPageDocuments.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                              No documents match your search criteria
+                              No documents match your filter criteria
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -534,26 +537,23 @@ export function Generate() {
                     </Table>
                   </div>
                   
-                  {/* Pagination Controls */}
-                  {totalPages > 1 && (
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="text-sm text-muted-foreground">
-                        Page {currentPage} of {totalPages}
-                      </div>
-                      
+                  {/* Pagination Controls - Below the grid */}
+                  <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-4">
+                      <span>
+                        View {startIndex + 1} - {Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length}
+                        {selectedDocuments.length > 0 && (
+                          <Badge variant="secondary" className="ml-2">
+                            {selectedDocuments.length} selected
+                          </Badge>
+                        )}
+                      </span>
+                    </div>
+                    
+                    {totalPages > 1 && (
                       <div className="flex items-center gap-2">
                         <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setCurrentPage(1)}
-                          disabled={currentPage === 1}
-                          className="h-8 w-8 p-0"
-                        >
-                          <CaretDoubleLeft size={14} />
-                        </Button>
-                        
-                        <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => setCurrentPage(currentPage - 1)}
                           disabled={currentPage === 1}
@@ -562,35 +562,26 @@ export function Generate() {
                           <CaretLeft size={14} />
                         </Button>
                         
-                        <div className="flex items-center gap-1">
-                          {[...Array(Math.min(5, totalPages))].map((_, index) => {
-                            let pageNum
-                            if (totalPages <= 5) {
-                              pageNum = index + 1
-                            } else if (currentPage <= 3) {
-                              pageNum = index + 1
-                            } else if (currentPage >= totalPages - 2) {
-                              pageNum = totalPages - 4 + index
-                            } else {
-                              pageNum = currentPage - 2 + index
+                        <span className="text-sm">Page</span>
+                        
+                        <Input
+                          type="number"
+                          min="1"
+                          max={totalPages}
+                          value={currentPage}
+                          onChange={(e) => {
+                            const page = parseInt(e.target.value)
+                            if (page >= 1 && page <= totalPages) {
+                              setCurrentPage(page)
                             }
-                            
-                            return (
-                              <Button
-                                key={pageNum}
-                                variant={currentPage === pageNum ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setCurrentPage(pageNum)}
-                                className="h-8 w-8 p-0"
-                              >
-                                {pageNum}
-                              </Button>
-                            )
-                          })}
-                        </div>
+                          }}
+                          className="w-16 h-8 text-center text-sm"
+                        />
+                        
+                        <span className="text-sm">of {totalPages}</span>
                         
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => setCurrentPage(currentPage + 1)}
                           disabled={currentPage === totalPages}
@@ -598,19 +589,9 @@ export function Generate() {
                         >
                           <CaretRight size={14} />
                         </Button>
-                        
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setCurrentPage(totalPages)}
-                          disabled={currentPage === totalPages}
-                          className="h-8 w-8 p-0"
-                        >
-                          <CaretDoubleRight size={14} />
-                        </Button>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
