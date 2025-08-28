@@ -45,8 +45,6 @@ export function Collaborate() {
 export function Generate() {
   const [currentTab, setCurrentTab] = useState('generate-collateral')
   const [selectedDocuments, setSelectedDocuments] = useKV('generate-selected-docs', [] as string[])
-  const [showOnlySelected, setShowOnlySelected] = useState(false)
-  const [selectAll, setSelectAll] = useState(false)
   const [collateralName, setCollateralName] = useState('')
   const [selectedCollaterals, setSelectedCollaterals] = useKV('generate-selected-collaterals', [] as string[])
   
@@ -54,9 +52,7 @@ export function Generate() {
   const collateralOptions = [
     'Medicare ANOC',
     'Medicare EOC',
-    'Medicare SB',
-    'Medicare VIS',
-    'Medicare BENHI'
+    'Medicare SB'
   ]
   
   const documents = [
@@ -71,23 +67,10 @@ export function Generate() {
     { id: 'H0169009000', name: 'H0169009000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169009000', folderVersion: '2026_0.01' }
   ]
   
-  const filteredDocuments = showOnlySelected ? 
-    documents.filter(doc => selectedDocuments.includes(doc.id)) : 
-    documents
-  
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
       checked ? [...current, docId] : current.filter(id => id !== docId)
     )
-  }
-  
-  const handleSelectAll = (checked: boolean) => {
-    setSelectAll(checked)
-    if (checked) {
-      setSelectedDocuments(documents.map(doc => doc.id))
-    } else {
-      setSelectedDocuments([])
-    }
   }
   
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
@@ -216,7 +199,7 @@ export function Generate() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center justify-between">
-                    Generate Reports List
+                    Generate Collaterals List
                     <Button variant="ghost" size="sm">
                       <X size={16} />
                     </Button>
@@ -257,31 +240,7 @@ export function Generate() {
               {/* Right Panel - Document Selection */}
               <Card>
                 <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="show-selected"
-                          checked={showOnlySelected}
-                          onCheckedChange={(checked) => setShowOnlySelected(checked as boolean)}
-                        />
-                        <Label htmlFor="show-selected" className="text-sm">
-                          Show only Selected
-                        </Label>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="select-all"
-                          checked={selectAll}
-                          onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                        />
-                        <Label htmlFor="select-all" className="text-sm">
-                          Select All
-                        </Label>
-                      </div>
-                    </div>
-                    
+                  <div className="flex items-center justify-end">                    
                     <Button className="bg-blue-600 hover:bg-blue-700">
                       Queue
                     </Button>
@@ -309,7 +268,7 @@ export function Generate() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {filteredDocuments.map((document) => (
+                        {documents.map((document) => (
                           <TableRow key={document.id}>
                             <TableCell>
                               <Checkbox
