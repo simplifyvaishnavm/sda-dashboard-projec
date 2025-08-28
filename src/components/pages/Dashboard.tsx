@@ -56,7 +56,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
@@ -69,7 +69,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       </div>
 
       {/* Quick Navigation Tiles */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {navigationTiles.map((tile) => {
           const IconComponent = tile.icon
           return (
@@ -78,9 +78,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
               className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${tile.bgHover} group`}
               onClick={() => onNavigate?.(tile.id)}
             >
-              <CardContent className="p-6 text-center">
-                <div className={`w-12 h-12 mx-auto mb-3 rounded-lg bg-gradient-to-br ${tile.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                  <IconComponent size={24} className={tile.iconColor} weight="duotone" />
+              <CardContent className="p-4 text-center">
+                <div className={`w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br ${tile.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                  <IconComponent size={20} className={tile.iconColor} weight="duotone" />
                 </div>
                 <h3 className="font-semibold text-sm mb-1">{tile.title}</h3>
                 <p className="text-xs text-muted-foreground">{tile.description}</p>
@@ -90,7 +90,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         })}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Documents</CardTitle>
@@ -125,20 +125,20 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle>Recent Documents</CardTitle>
             <CardDescription>Your recently accessed documents</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {[
                 { name: 'Product Requirements - Q4 2024', updated: '2 hours ago', status: 'Draft' },
                 { name: 'Marketing Strategy Proposal', updated: '1 day ago', status: 'Review' },
                 { name: 'Technical Architecture Guide', updated: '3 days ago', status: 'Published' },
               ].map((doc, index) => (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div key={index} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
                   <div>
                     <p className="font-medium text-sm">{doc.name}</p>
                     <p className="text-xs text-muted-foreground">{doc.updated}</p>
@@ -158,13 +158,13 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             <CardDescription>Recent team activity</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {[
                 { action: 'Sarah commented on "Marketing Strategy"', time: '30 mins ago' },
                 { action: 'John published "Tech Guide v2.1"', time: '2 hours ago' },
                 { action: 'Team review completed for "Q4 Planning"', time: '4 hours ago' },
               ].map((activity, index) => (
-                <div key={index} className="p-3 rounded-lg bg-muted/30">
+                <div key={index} className="p-2 rounded-lg bg-muted/30">
                   <p className="font-medium text-sm">{activity.action}</p>
                   <p className="text-xs text-muted-foreground">{activity.time}</p>
                 </div>

@@ -14,14 +14,14 @@ import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRigh
 
 export function MasterList() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Master List</h1>
           <p className="text-muted-foreground mt-1">Manage all your documents</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">Master List functionality coming soon...</p>
       </div>
     </div>
@@ -30,14 +30,14 @@ export function MasterList() {
 
 export function Collaborate() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Collaborate</h1>
           <p className="text-muted-foreground mt-1">Work together on documents</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">Collaboration features coming soon...</p>
       </div>
     </div>
@@ -248,9 +248,9 @@ export function Generate() {
   const isSomeVisibleSelected = currentPageDocuments.some(doc => selectedDocuments.includes(doc.id))
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-foreground mb-2">
+    <div className="p-4">
+      <div className="mb-4">
+        <h1 className="text-2xl font-semibold text-foreground mb-2">
           Generate
         </h1>
         <p className="text-muted-foreground">
@@ -274,18 +274,18 @@ export function Generate() {
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="generate-collateral" className="mt-6">
-          <div className="space-y-6">
+        <TabsContent value="generate-collateral" className="mt-4">
+          <div className="space-y-4">
             {/* Global Filters */}
             <Card>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-5 gap-4">
-                  <div className="space-y-2">
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-5 gap-3">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">
                       Effective Year <span className="text-red-500">*</span>
                     </Label>
                     <Select defaultValue="2026">
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -296,12 +296,12 @@ export function Generate() {
                     </Select>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">
                       Print Type <span className="text-red-500">*</span>
                     </Label>
                     <Select defaultValue="regular">
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -313,12 +313,12 @@ export function Generate() {
                     </Select>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">
                       Language <span className="text-red-500">*</span>
                     </Label>
                     <Select defaultValue="english">
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -329,10 +329,10 @@ export function Generate() {
                     </Select>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">Version</Label>
                     <Select defaultValue="released">
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -342,12 +342,12 @@ export function Generate() {
                     </Select>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">
                       Line of Business <span className="text-red-500">*</span>
                     </Label>
                     <Select defaultValue="both">
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -362,28 +362,29 @@ export function Generate() {
             </Card>
             
             {/* Main Content Area */}
-            <div className="grid grid-cols-[350px_1fr] gap-6">
+            <div className="grid grid-cols-[320px_1fr] gap-4">
               {/* Left Panel - Collateral Selection */}
               <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center justify-between">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center justify-between">
                     Generate Collaterals List
-                    <Button variant="ghost" size="sm">
-                      <X size={16} />
+                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <X size={14} />
                     </Button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
+                <CardContent className="space-y-3">
+                  <div className="space-y-1">
                     <Label className="text-sm font-medium">Collateral Name</Label>
                     <Input
                       value={collateralName}
                       onChange={(e) => setCollateralName(e.target.value)}
                       placeholder="Enter collateral name"
+                      className="h-9"
                     />
                   </div>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {collateralOptions.map((collateral) => (
                       <div key={collateral} className="flex items-center space-x-2">
                         <Checkbox
@@ -407,12 +408,12 @@ export function Generate() {
               
               {/* Right Panel - Document Selection */}
               <Card>
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-2">
                   <div className="flex items-center justify-end gap-2">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" className="flex items-center gap-2">
-                          <Columns size={16} />
+                        <Button variant="outline" size="sm" className="flex items-center gap-2 h-8">
+                          <Columns size={14} />
                           Columns
                         </Button>
                       </DropdownMenuTrigger>
@@ -428,22 +429,22 @@ export function Generate() {
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button className="bg-blue-600 hover:bg-blue-700 h-8">
                       Queue
                     </Button>
                   </div>
                   
-                  <CardTitle className="text-lg mt-4">
+                  <CardTitle className="text-base mt-3">
                     Select Documents
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent>
+                <CardContent className="p-3">
                   {/* Filter Summary and Clear All */}
                   {Object.values(columnFilters).some(filter => filter !== '') && (
-                    <div className="flex items-center justify-between mb-4 p-3 bg-blue-50 rounded-lg border">
+                    <div className="flex items-center justify-between mb-3 p-2 bg-blue-50 rounded-lg border">
                       <div className="flex items-center gap-2">
-                        <Funnel size={16} className="text-blue-600" />
+                        <Funnel size={14} className="text-blue-600" />
                         <span className="text-sm font-medium text-blue-800">
                           Active Filters: {Object.values(columnFilters).filter(filter => filter !== '').length}
                         </span>
@@ -452,7 +453,7 @@ export function Generate() {
                         variant="ghost" 
                         size="sm" 
                         onClick={clearAllFilters}
-                        className="text-blue-600 hover:text-blue-700"
+                        className="text-blue-600 hover:text-blue-700 h-7"
                       >
                         Clear All
                       </Button>
@@ -464,7 +465,7 @@ export function Generate() {
                       <TableHeader>
                         {/* Column Headers with Sort */}
                         <TableRow className="bg-muted/50">
-                          <TableHead className="w-12 border-r">
+                          <TableHead className="w-10 border-r h-10">
                             <Checkbox
                               checked={isAllVisibleSelected}
                               onCheckedChange={handleSelectAll}
@@ -474,51 +475,51 @@ export function Generate() {
                             />
                           </TableHead>
                           {visibleColumns.documentName && (
-                            <TableHead className="border-r">
+                            <TableHead className="border-r h-10">
                               <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('name')}>
                                 Document Name
                                 {sortField === 'name' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                  sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.planType && (
-                            <TableHead className="border-r">
+                            <TableHead className="border-r h-10">
                               <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('planType')}>
                                 Plan Type
                                 {sortField === 'planType' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                  sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.egwp && (
-                            <TableHead className="border-r">
+                            <TableHead className="border-r h-10">
                               <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('egwp')}>
                                 EGWP
                                 {sortField === 'egwp' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                  sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.folderName && (
-                            <TableHead className="border-r">
+                            <TableHead className="border-r h-10">
                               <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderName')}>
                                 Folder Name
                                 {sortField === 'folderName' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                  sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.folderVersion && (
-                            <TableHead>
+                            <TableHead className="h-10">
                               <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderVersion')}>
                                 Folder Version Number
                                 {sortField === 'folderVersion' && (
-                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                  sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                                 )}
                               </div>
                             </TableHead>
@@ -527,62 +528,62 @@ export function Generate() {
 
                         {/* Filter Row */}
                         <TableRow className="bg-white border-b-2">
-                          <TableHead className="p-2 border-r">
+                          <TableHead className="p-1 border-r">
                             {/* Empty cell for checkbox column */}
                           </TableHead>
                           {visibleColumns.documentName && (
-                            <TableHead className="p-2 border-r">
+                            <TableHead className="p-1 border-r">
                               <div className="relative">
-                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                   placeholder="Search documents..."
                                   value={columnFilters.documentName}
                                   onChange={(e) => updateColumnFilter('documentName', e.target.value)}
-                                  className="pl-9 h-8 text-sm"
+                                  className="pl-7 h-7 text-sm"
                                 />
                                 {columnFilters.documentName && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
                                     onClick={() => clearColumnFilter('documentName')}
                                   >
-                                    <X size={12} />
+                                    <X size={10} />
                                   </Button>
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.planType && (
-                            <TableHead className="p-2 border-r">
+                            <TableHead className="p-1 border-r">
                               <div className="relative">
-                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                   placeholder="Filter plan type..."
                                   value={columnFilters.planType}
                                   onChange={(e) => updateColumnFilter('planType', e.target.value)}
-                                  className="pl-9 h-8 text-sm"
+                                  className="pl-7 h-7 text-sm"
                                 />
                                 {columnFilters.planType && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
                                     onClick={() => clearColumnFilter('planType')}
                                   >
-                                    <X size={12} />
+                                    <X size={10} />
                                   </Button>
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.egwp && (
-                            <TableHead className="p-2 border-r">
+                            <TableHead className="p-1 border-r">
                               <Select 
                                 value={columnFilters.egwp || 'all'} 
                                 onValueChange={(value) => updateColumnFilter('egwp', value === 'all' ? '' : value)}
                               >
-                                <SelectTrigger className="h-8 text-sm">
+                                <SelectTrigger className="h-7 text-sm">
                                   <SelectValue placeholder="Filter EGWP" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -594,46 +595,46 @@ export function Generate() {
                             </TableHead>
                           )}
                           {visibleColumns.folderName && (
-                            <TableHead className="p-2 border-r">
+                            <TableHead className="p-1 border-r">
                               <div className="relative">
-                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                   placeholder="Filter folder..."
                                   value={columnFilters.folderName}
                                   onChange={(e) => updateColumnFilter('folderName', e.target.value)}
-                                  className="pl-9 h-8 text-sm"
+                                  className="pl-7 h-7 text-sm"
                                 />
                                 {columnFilters.folderName && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
                                     onClick={() => clearColumnFilter('folderName')}
                                   >
-                                    <X size={12} />
+                                    <X size={10} />
                                   </Button>
                                 )}
                               </div>
                             </TableHead>
                           )}
                           {visibleColumns.folderVersion && (
-                            <TableHead className="p-2">
+                            <TableHead className="p-1">
                               <div className="relative">
-                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                   placeholder="Filter version..."
                                   value={columnFilters.folderVersion}
                                   onChange={(e) => updateColumnFilter('folderVersion', e.target.value)}
-                                  className="pl-9 h-8 text-sm"
+                                  className="pl-7 h-7 text-sm"
                                 />
                                 {columnFilters.folderVersion && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
                                     onClick={() => clearColumnFilter('folderVersion')}
                                   >
-                                    <X size={12} />
+                                    <X size={10} />
                                   </Button>
                                 )}
                               </div>
@@ -644,7 +645,7 @@ export function Generate() {
                       <TableBody>
                         {currentPageDocuments.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-12 text-muted-foreground">
+                            <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-8 text-muted-foreground">
                               {Object.values(columnFilters).some(filter => filter !== '') 
                                 ? "No documents match the current filters" 
                                 : "No documents available"
@@ -658,10 +659,10 @@ export function Generate() {
                               className={`
                                 ${selectedDocuments.includes(document.id) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
                                 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
-                                border-b transition-colors
+                                border-b transition-colors h-9
                               `}
                             >
-                              <TableCell className="border-r">
+                              <TableCell className="border-r p-2">
                                 <Checkbox
                                   checked={selectedDocuments.includes(document.id)}
                                   onCheckedChange={(checked) => 
@@ -670,14 +671,14 @@ export function Generate() {
                                 />
                               </TableCell>
                               {visibleColumns.documentName && (
-                                <TableCell className="font-mono text-blue-600 font-medium border-r">
+                                <TableCell className="font-mono text-blue-600 font-medium border-r p-2 text-sm">
                                   {document.name}
                                 </TableCell>
                               )}
                               {visibleColumns.planType && (
-                                <TableCell className="border-r">
+                                <TableCell className="border-r p-2">
                                   {document.planType ? (
-                                    <Badge variant="outline" className="font-medium">
+                                    <Badge variant="outline" className="font-medium text-xs">
                                       {document.planType}
                                     </Badge>
                                   ) : (
@@ -686,22 +687,22 @@ export function Generate() {
                                 </TableCell>
                               )}
                               {visibleColumns.egwp && (
-                                <TableCell className="border-r">
+                                <TableCell className="border-r p-2">
                                   <Badge 
                                     variant={document.egwp === 'Yes' ? 'default' : 'secondary'}
-                                    className={document.egwp === 'Yes' ? 'bg-green-100 text-green-800 border-green-300' : ''}
+                                    className={`text-xs ${document.egwp === 'Yes' ? 'bg-green-100 text-green-800 border-green-300' : ''}`}
                                   >
                                     {document.egwp}
                                   </Badge>
                                 </TableCell>
                               )}
                               {visibleColumns.folderName && (
-                                <TableCell className="font-mono text-sm border-r">
+                                <TableCell className="font-mono text-sm border-r p-2">
                                   {document.folderName}
                                 </TableCell>
                               )}
                               {visibleColumns.folderVersion && (
-                                <TableCell className="font-mono text-sm">
+                                <TableCell className="font-mono text-sm p-2">
                                   <Badge variant="outline" className="font-mono text-xs">
                                     {document.folderVersion}
                                   </Badge>
@@ -715,8 +716,8 @@ export function Generate() {
                   </div>
                   
                   {/* Enhanced Pagination Controls */}
-                  <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between mt-3 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-3">
                       <span>
                         Showing {startIndex + 1} - {Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length}
                         {documents.length !== filteredAndSortedDocuments.length && (
@@ -725,7 +726,7 @@ export function Generate() {
                           </span>
                         )}
                         {selectedDocuments.length > 0 && (
-                          <Badge variant="secondary" className="ml-2">
+                          <Badge variant="secondary" className="ml-2 text-xs">
                             {selectedDocuments.length} selected
                           </Badge>
                         )}
@@ -739,9 +740,9 @@ export function Generate() {
                           size="sm"
                           onClick={() => setCurrentPage(currentPage - 1)}
                           disabled={currentPage === 1}
-                          className="h-8 w-8 p-0"
+                          className="h-7 w-7 p-0"
                         >
-                          <CaretLeft size={14} />
+                          <CaretLeft size={12} />
                         </Button>
                         
                         <div className="flex items-center gap-2">
@@ -757,7 +758,7 @@ export function Generate() {
                                 setCurrentPage(page)
                               }
                             }}
-                            className="w-16 h-8 text-center text-sm"
+                            className="w-14 h-7 text-center text-sm"
                           />
                           <span className="text-sm">of {totalPages}</span>
                         </div>
@@ -767,9 +768,9 @@ export function Generate() {
                           size="sm"
                           onClick={() => setCurrentPage(currentPage + 1)}
                           disabled={currentPage === totalPages}
-                          className="h-8 w-8 p-0"
+                          className="h-7 w-7 p-0"
                         >
-                          <CaretRight size={14} />
+                          <CaretRight size={12} />
                         </Button>
                       </div>
                     )}
@@ -780,7 +781,7 @@ export function Generate() {
           </div>
         </TabsContent>
         
-        <TabsContent value="queued-collateral" className="mt-6">
+        <TabsContent value="queued-collateral" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>Queued Documents</CardTitle>
@@ -796,7 +797,7 @@ export function Generate() {
           </Card>
         </TabsContent>
         
-        <TabsContent value="system-compare" className="mt-6">
+        <TabsContent value="system-compare" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>System Generated Compare</CardTitle>
@@ -820,14 +821,14 @@ export function Generate() {
 
 export function Publish() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Publish</h1>
           <p className="text-muted-foreground mt-1">Share and distribute documents</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">Publishing features coming soon...</p>
       </div>
     </div>
@@ -836,14 +837,14 @@ export function Publish() {
 
 export function AskBenny() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Ask Benny</h1>
           <p className="text-muted-foreground mt-1">Your AI assistant for document help</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">AI assistant coming soon...</p>
       </div>
     </div>
@@ -852,14 +853,14 @@ export function AskBenny() {
 
 export function AdminSettings() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Admin Settings</h1>
           <p className="text-muted-foreground mt-1">Manage system configuration</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">Admin settings coming soon...</p>
       </div>
     </div>
@@ -868,14 +869,14 @@ export function AdminSettings() {
 
 export function DesignStudio() {
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Design Studio</h1>
           <p className="text-muted-foreground mt-1">Create and manage templates</p>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-12 text-center">
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
         <p className="text-muted-foreground">Design studio coming soon...</p>
       </div>
     </div>
