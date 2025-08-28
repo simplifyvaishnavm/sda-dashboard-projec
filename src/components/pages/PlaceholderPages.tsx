@@ -712,7 +712,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.batchId}
                           onChange={(e) => updateColumnFilter('batchId', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -735,7 +734,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.source}
                           onChange={(e) => updateColumnFilter('source', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -758,7 +756,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.mlType}
                           onChange={(e) => updateColumnFilter('mlType', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -781,7 +778,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.collateralName}
                           onChange={(e) => updateColumnFilter('collateralName', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -804,7 +800,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.fontType}
                           onChange={(e) => updateColumnFilter('fontType', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -827,7 +822,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.productName}
                           onChange={(e) => updateColumnFilter('productName', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -850,7 +844,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.folderName}
                           onChange={(e) => updateColumnFilter('folderName', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -873,7 +866,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.versionNumber}
                           onChange={(e) => updateColumnFilter('versionNumber', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -896,7 +888,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.status}
                           onChange={(e) => updateColumnFilter('status', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -919,7 +910,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.queuedDate}
                           onChange={(e) => updateColumnFilter('queuedDate', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -942,7 +932,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.processedDate}
                           onChange={(e) => updateColumnFilter('processedDate', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -965,7 +954,6 @@ function QueuedCollateral() {
                       <div className="relative">
                         <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="Filter..."
                           value={columnFilters.userName}
                           onChange={(e) => updateColumnFilter('userName', e.target.value)}
                           className="pl-7 h-7 text-sm"
@@ -1714,7 +1702,6 @@ export function Generate() {
                               <div className="relative">
                                 <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
-                                  placeholder="Search documents..."
                                   value={columnFilters.documentName}
                                   onChange={(e) => updateColumnFilter('documentName', e.target.value)}
                                   className="pl-7 h-7 text-sm"
@@ -1737,7 +1724,6 @@ export function Generate() {
                               <div className="relative">
                                 <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
-                                  placeholder="Filter plan type..."
                                   value={columnFilters.planType}
                                   onChange={(e) => updateColumnFilter('planType', e.target.value)}
                                   className="pl-7 h-7 text-sm"
@@ -1777,7 +1763,6 @@ export function Generate() {
                               <div className="relative">
                                 <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
-                                  placeholder="Filter folder..."
                                   value={columnFilters.folderName}
                                   onChange={(e) => updateColumnFilter('folderName', e.target.value)}
                                   className="pl-7 h-7 text-sm"
@@ -1800,7 +1785,6 @@ export function Generate() {
                               <div className="relative">
                                 <MagnifyingGlass size={12} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                                 <Input
-                                  placeholder="Filter version..."
                                   value={columnFilters.folderVersion}
                                   onChange={(e) => updateColumnFilter('folderVersion', e.target.value)}
                                   className="pl-7 h-7 text-sm"
