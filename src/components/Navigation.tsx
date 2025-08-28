@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { 
   House, 
-  List, 
+  FolderOpen, 
   Users, 
-  Sparkle, 
+  FilePdf, 
   Export, 
   Gear, 
   Palette,
-  CaretLeft
+  CaretLeft,
+  Robot
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -21,10 +22,11 @@ interface NavigationProps {
 
 const navigationItems = [
   { id: 'dashboard', label: 'Dashboard', icon: House },
-  { id: 'master-list', label: 'Master List', icon: List },
+  { id: 'master-list', label: 'Master List', icon: FolderOpen },
   { id: 'collaborate', label: 'Collaborate', icon: Users },
-  { id: 'generate', label: 'Generate', icon: Sparkle },
+  { id: 'generate', label: 'Generate', icon: FilePdf },
   { id: 'publish', label: 'Publish', icon: Export },
+  { id: 'ask-benny', label: 'Ask Benny', icon: Robot },
   { id: 'admin-settings', label: 'Admin Settings', icon: Gear },
   { id: 'design-studio', label: 'Design Studio', icon: Palette },
 ]

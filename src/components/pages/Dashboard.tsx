@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plus, FileText, Users, TrendingUp, Folders, Sparkle, ShareNetwork, Robot, PaintBrush } from '@phosphor-icons/react'
+import { Plus, FileText, Users, TrendingUp, FolderOpen, FilePdf, ShareNetwork, Robot, PaintBrush } from '@phosphor-icons/react'
 
 interface DashboardProps {
   onNavigate?: (page: string) => void
@@ -12,7 +12,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       id: 'master-list',
       title: 'Manage',
       description: 'Manage collateral content',
-      icon: Folders,
+      icon: FolderOpen,
       gradient: 'from-blue-500/20 to-blue-600/20',
       iconColor: 'text-blue-600',
       bgHover: 'hover:bg-blue-50'
@@ -21,7 +21,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       id: 'generate',
       title: 'Generate',
       description: 'Generate PDF documents',
-      icon: Sparkle,
+      icon: FilePdf,
       gradient: 'from-purple-500/20 to-purple-600/20',
       iconColor: 'text-purple-600',
       bgHover: 'hover:bg-purple-50'
