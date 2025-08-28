@@ -335,7 +335,7 @@ function QueuedCollateral() {
     { key: 'processedDate', label: 'Processed Date' },
     { key: 'userName', label: 'UserName' },
     { key: 'downloadPdf', label: 'Download PDF' },
-    { key: 'downloadJson', label: 'Download ...' }
+    { key: 'downloadJson', label: 'Download Word' }
   ]
   
   // Filter and sort data
@@ -751,7 +751,7 @@ function QueuedCollateral() {
                   )}
                   {visibleColumns.downloadJson && (
                     <TableHead className="h-12 text-center min-w-[120px]">
-                      Download ...
+                      Download Word
                     </TableHead>
                   )}
                 </TableRow>
