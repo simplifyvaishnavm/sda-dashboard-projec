@@ -155,8 +155,9 @@ export function Generate() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="regular">Regular</SelectItem>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="final">Final</SelectItem>
+                        <SelectItem value="large-print-16pt">Large Print 16pt</SelectItem>
+                        <SelectItem value="large-print-17pt">Large Print 17pt</SelectItem>
+                        <SelectItem value="large-print-18pt">Large Print 18pt</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -179,14 +180,13 @@ export function Generate() {
                   
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Version</Label>
-                    <Select defaultValue="release">
+                    <Select defaultValue="released">
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="release">Release</SelectItem>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="beta">Beta</SelectItem>
+                        <SelectItem value="released">Released</SelectItem>
+                        <SelectItem value="in-progress">In Progress</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -201,8 +201,8 @@ export function Generate() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="both">Both</SelectItem>
-                        <SelectItem value="medicare">Medicare</SelectItem>
-                        <SelectItem value="medicaid">Medicaid</SelectItem>
+                        <SelectItem value="individual">Individual</SelectItem>
+                        <SelectItem value="egwp">EGWP</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
