@@ -1233,7 +1233,6 @@ function QueuedCollateral() {
               </div>
             )}
           </div>
-          </div>
         </CardContent>
       </Card>
     </div>
