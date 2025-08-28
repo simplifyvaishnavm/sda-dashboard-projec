@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Clock, BarChart3, X, MagnifyingGlass, FunnelSimple, SortAscending, SortDescending, CaretUp, CaretDown } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, MagnifyingGlass, FunnelSimple, SortAscending, SortDescending, CaretUp, CaretDown, CaretLeft, CaretRight, CaretDoubleLeft, CaretDoubleRight } from "@phosphor-icons/react"
 
 export function MasterList() {
   return (
@@ -56,6 +56,10 @@ export function Generate() {
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  
   // Sample data matching the screenshot
   const collateralOptions = [
     'Medicare ANOC',
@@ -75,7 +79,26 @@ export function Generate() {
     { id: 'H0169009000', name: 'H0169009000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169009000', folderVersion: '2026_0.01' },
     { id: 'H0169010000', name: 'H0169010000', planType: 'HMO', egwp: 'Yes', folderName: 'H0169010000', folderVersion: '2026_0.01' },
     { id: 'H0169011000', name: 'H0169011000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169011000', folderVersion: '2026_0.01' },
-    { id: 'H0169012000', name: 'H0169012000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169012000', folderVersion: '2026_0.02' }
+    { id: 'H0169012000', name: 'H0169012000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169012000', folderVersion: '2026_0.02' },
+    // Expanded sample data to better showcase pagination
+    { id: 'H0169013000', name: 'H0169013000', planType: 'HMO', egwp: 'No', folderName: 'H0169013000', folderVersion: '2026_0.01' },
+    { id: 'H0169014000', name: 'H0169014000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169014000', folderVersion: '2026_0.01' },
+    { id: 'H0169015000', name: 'H0169015000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169015000', folderVersion: '2026_0.02' },
+    { id: 'H0169016000', name: 'H0169016000', planType: 'HMOPOS', egwp: 'Yes', folderName: 'H0169016000', folderVersion: '2026_0.01' },
+    { id: 'H0169017000', name: 'H0169017000', planType: 'HMO', egwp: 'No', folderName: 'H0169017000', folderVersion: '2026_0.03' },
+    { id: 'H0169018000', name: 'H0169018000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169018000', folderVersion: '2026_0.01' },
+    { id: 'H0169019000', name: 'H0169019000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169019000', folderVersion: '2026_0.02' },
+    { id: 'H0169020000', name: 'H0169020000', planType: 'HMOPOS', egwp: 'Yes', folderName: 'H0169020000', folderVersion: '2026_0.01' },
+    { id: 'H0169021000', name: 'H0169021000', planType: 'HMO', egwp: 'No', folderName: 'H0169021000', folderVersion: '2026_0.01' },
+    { id: 'H0169022000', name: 'H0169022000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169022000', folderVersion: '2026_0.02' },
+    { id: 'H0169023000', name: 'H0169023000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169023000', folderVersion: '2026_0.01' },
+    { id: 'H0169024000', name: 'H0169024000', planType: 'HMOPOS', egwp: 'Yes', folderName: 'H0169024000', folderVersion: '2026_0.03' },
+    { id: 'H0169025000', name: 'H0169025000', planType: 'HMO', egwp: 'No', folderName: 'H0169025000', folderVersion: '2026_0.01' },
+    { id: 'H0169026000', name: 'H0169026000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169026000', folderVersion: '2026_0.02' },
+    { id: 'H0169027000', name: 'H0169027000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169027000', folderVersion: '2026_0.01' },
+    { id: 'H0169028000', name: 'H0169028000', planType: 'HMOPOS', egwp: 'Yes', folderName: 'H0169028000', folderVersion: '2026_0.02' },
+    { id: 'H0169029000', name: 'H0169029000', planType: 'HMO', egwp: 'No', folderName: 'H0169029000', folderVersion: '2026_0.03' },
+    { id: 'H0169030000', name: 'H0169030000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169030000', folderVersion: '2026_0.01' }
   ]
   
   // Get unique values for filters
@@ -112,6 +135,17 @@ export function Generate() {
     return filtered
   }, [documents, searchTerm, planTypeFilter, egwpFilter, sortField, sortDirection])
   
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredAndSortedDocuments.length / pageSize)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const currentPageDocuments = filteredAndSortedDocuments.slice(startIndex, endIndex)
+  
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [searchTerm, planTypeFilter, egwpFilter, sortField, sortDirection])
+  
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
       checked ? [...current, docId] : current.filter(id => id !== docId)
@@ -120,17 +154,32 @@ export function Generate() {
   
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allVisibleIds = filteredAndSortedDocuments.map(doc => doc.id)
+      const allVisibleIds = currentPageDocuments.map(doc => doc.id)
       setSelectedDocuments((current: string[]) => {
         const newSet = new Set([...current, ...allVisibleIds])
         return Array.from(newSet)
       })
     } else {
-      const visibleIds = new Set(filteredAndSortedDocuments.map(doc => doc.id))
+      const visibleIds = new Set(currentPageDocuments.map(doc => doc.id))
       setSelectedDocuments((current: string[]) => 
         current.filter(id => !visibleIds.has(id))
       )
     }
+  }
+  
+  const handleSelectAllFiltered = () => {
+    const allFilteredIds = filteredAndSortedDocuments.map(doc => doc.id)
+    setSelectedDocuments((current: string[]) => {
+      const newSet = new Set([...current, ...allFilteredIds])
+      return Array.from(newSet)
+    })
+  }
+  
+  const handleDeselectAllFiltered = () => {
+    const filteredIds = new Set(filteredAndSortedDocuments.map(doc => doc.id))
+    setSelectedDocuments((current: string[]) => 
+      current.filter(id => !filteredIds.has(id))
+    )
   }
   
   const handleSort = (field: string) => {
@@ -148,6 +197,7 @@ export function Generate() {
     setEgwpFilter('all')
     setSortField(null)
     setSortDirection('asc')
+    setCurrentPage(1)
   }
   
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
@@ -156,10 +206,10 @@ export function Generate() {
     )
   }
   
-  const isAllVisibleSelected = filteredAndSortedDocuments.length > 0 && 
-    filteredAndSortedDocuments.every(doc => selectedDocuments.includes(doc.id))
+  const isAllVisibleSelected = currentPageDocuments.length > 0 && 
+    currentPageDocuments.every(doc => selectedDocuments.includes(doc.id))
   
-  const isSomeVisibleSelected = filteredAndSortedDocuments.some(doc => selectedDocuments.includes(doc.id))
+  const isSomeVisibleSelected = currentPageDocuments.some(doc => selectedDocuments.includes(doc.id))
 
   return (
     <div className="p-8">
@@ -395,27 +445,70 @@ export function Generate() {
                       </div>
                     </div>
                     
-                    {/* Results Summary */}
+                    {/* Results Summary and Page Size Control */}
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>
-                        Showing {filteredAndSortedDocuments.length} of {documents.length} documents
-                        {selectedDocuments.length > 0 && (
-                          <Badge variant="secondary" className="ml-2">
-                            {selectedDocuments.length} selected
-                          </Badge>
-                        )}
-                      </span>
-                      
-                      {sortField && (
-                        <div className="flex items-center gap-1">
-                          <span>Sorted by {sortField}</span>
-                          {sortDirection === 'asc' ? (
-                            <SortAscending size={14} />
-                          ) : (
-                            <SortDescending size={14} />
+                      <div className="flex items-center gap-4">
+                        <span>
+                          Showing {startIndex + 1}-{Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length} documents
+                          {selectedDocuments.length > 0 && (
+                            <Badge variant="secondary" className="ml-2">
+                              {selectedDocuments.length} selected
+                            </Badge>
                           )}
+                        </span>
+                        
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">Show:</span>
+                          <Select value={pageSize.toString()} onValueChange={(value) => {
+                            setPageSize(Number(value))
+                            setCurrentPage(1)
+                          }}>
+                            <SelectTrigger className="w-20 h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="10">10</SelectItem>
+                              <SelectItem value="25">25</SelectItem>
+                              <SelectItem value="50">50</SelectItem>
+                              <SelectItem value="100">100</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                      )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        {filteredAndSortedDocuments.length > currentPageDocuments.length && (
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleSelectAllFiltered}
+                              className="h-7 px-2 text-xs"
+                            >
+                              Select All {filteredAndSortedDocuments.length}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleDeselectAllFiltered}
+                              className="h-7 px-2 text-xs"
+                            >
+                              Deselect All
+                            </Button>
+                          </div>
+                        )}
+                        
+                        {sortField && (
+                          <div className="flex items-center gap-1">
+                            <span>Sorted by {sortField}</span>
+                            {sortDirection === 'asc' ? (
+                              <SortAscending size={14} />
+                            ) : (
+                              <SortDescending size={14} />
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
@@ -475,14 +568,14 @@ export function Generate() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {filteredAndSortedDocuments.length === 0 ? (
+                        {currentPageDocuments.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                               No documents match your search criteria
                             </TableCell>
                           </TableRow>
                         ) : (
-                          filteredAndSortedDocuments.map((document) => (
+                          currentPageDocuments.map((document) => (
                             <TableRow key={document.id} className={selectedDocuments.includes(document.id) ? 'bg-blue-50' : ''}>
                               <TableCell>
                                 <Checkbox
@@ -517,6 +610,84 @@ export function Generate() {
                       </TableBody>
                     </Table>
                   </div>
+                  
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="text-sm text-muted-foreground">
+                        Page {currentPage} of {totalPages}
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(1)}
+                          disabled={currentPage === 1}
+                          className="h-8 w-8 p-0"
+                        >
+                          <CaretDoubleLeft size={14} />
+                        </Button>
+                        
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="h-8 w-8 p-0"
+                        >
+                          <CaretLeft size={14} />
+                        </Button>
+                        
+                        <div className="flex items-center gap-1">
+                          {[...Array(Math.min(5, totalPages))].map((_, index) => {
+                            let pageNum
+                            if (totalPages <= 5) {
+                              pageNum = index + 1
+                            } else if (currentPage <= 3) {
+                              pageNum = index + 1
+                            } else if (currentPage >= totalPages - 2) {
+                              pageNum = totalPages - 4 + index
+                            } else {
+                              pageNum = currentPage - 2 + index
+                            }
+                            
+                            return (
+                              <Button
+                                key={pageNum}
+                                variant={currentPage === pageNum ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setCurrentPage(pageNum)}
+                                className="h-8 w-8 p-0"
+                              >
+                                {pageNum}
+                              </Button>
+                            )
+                          })}
+                        </div>
+                        
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="h-8 w-8 p-0"
+                        >
+                          <CaretRight size={14} />
+                        </Button>
+                        
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(totalPages)}
+                          disabled={currentPage === totalPages}
+                          className="h-8 w-8 p-0"
+                        >
+                          <CaretDoubleRight size={14} />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
