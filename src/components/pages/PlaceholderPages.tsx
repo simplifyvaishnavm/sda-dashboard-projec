@@ -2538,7 +2538,7 @@ function LogsTab() {
       actionChangeType: 'Status',
       change: 'Publishing',
       commentReason: '',
-      updatedBy: 'R Varadharajan',
+      updatedBy: 'John Mitchell',
       dateTimestamp: '06/02/2025 05:00:14'
     },
     {
@@ -2546,9 +2546,9 @@ function LogsTab() {
       productName: 'H3653015000_H5232001000',
       collaborateVersion: '0.01',
       actionChangeType: 'Assignment',
-      change: 'Varadharajan R (Assigned)',
+      change: 'John Mitchell (Assigned)',
       commentReason: '',
-      updatedBy: 'R Varadharajan',
+      updatedBy: 'John Mitchell',
       dateTimestamp: '06/02/2025 05:00:14'
     },
     {
@@ -2556,9 +2556,9 @@ function LogsTab() {
       productName: 'H3653015000_H5232001000',
       collaborateVersion: '0.01',
       actionChangeType: 'Assignment',
-      change: 'Vishal Bargire (Assigned)',
+      change: 'Sarah Thompson (Assigned)',
       commentReason: '',
-      updatedBy: 'R Varadharajan',
+      updatedBy: 'John Mitchell',
       dateTimestamp: '06/02/2025 05:00:14'
     },
     {
@@ -2568,7 +2568,7 @@ function LogsTab() {
       actionChangeType: 'ECD',
       change: '06/09/2025',
       commentReason: '',
-      updatedBy: 'R Varadharajan',
+      updatedBy: 'John Mitchell',
       dateTimestamp: '06/02/2025 05:00:14'
     },
     {
@@ -2576,9 +2576,9 @@ function LogsTab() {
       productName: '',
       collaborateVersion: '',
       actionChangeType: 'User group associated',
-      change: 'Riley White associated (Product Gr...',
+      change: 'David Rodriguez associated (Product Gr...',
       commentReason: '',
-      updatedBy: 'R Varadharajan',
+      updatedBy: 'John Mitchell',
       dateTimestamp: '06/02/2025 04:49:03'
     },
     {
@@ -2586,9 +2586,9 @@ function LogsTab() {
       productName: '',
       collaborateVersion: '',
       actionChangeType: 'User group associated',
-      change: 'Elaine Warnecke associated (Comp...',
+      change: 'Maria Garcia associated (Comp...',
       commentReason: '',
-      updatedBy: 'Vishal Bargire',
+      updatedBy: 'Sarah Thompson',
       dateTimestamp: '05/29/2025 11:27:08'
     },
     {
@@ -2596,9 +2596,9 @@ function LogsTab() {
       productName: '',
       collaborateVersion: '',
       actionChangeType: 'User group associated',
-      change: 'Elaine Warnecke associated (Legal ...',
+      change: 'Maria Garcia associated (Legal ...',
       commentReason: '',
-      updatedBy: 'Vishal Bargire',
+      updatedBy: 'Sarah Thompson',
       dateTimestamp: '05/29/2025 11:27:08'
     },
     {
@@ -2606,9 +2606,9 @@ function LogsTab() {
       productName: '',
       collaborateVersion: '',
       actionChangeType: 'User group associated',
-      change: 'Elaine Warnecke associated (Mark...',
+      change: 'Maria Garcia associated (Mark...',
       commentReason: '',
-      updatedBy: 'Vishal Bargire',
+      updatedBy: 'Sarah Thompson',
       dateTimestamp: '05/29/2025 11:27:08'
     },
     {
@@ -2616,9 +2616,9 @@ function LogsTab() {
       productName: '',
       collaborateVersion: '',
       actionChangeType: 'User group associated',
-      change: 'Elaine Warnecke associated (Produ...',
+      change: 'Maria Garcia associated (Produ...',
       commentReason: '',
-      updatedBy: 'Vishal Bargire',
+      updatedBy: 'Sarah Thompson',
       dateTimestamp: '05/29/2025 11:27:08'
     }
   ]
