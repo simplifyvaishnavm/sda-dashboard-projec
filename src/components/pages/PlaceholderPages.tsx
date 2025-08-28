@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel } from "@phosphor-icons/react"
 
 export function MasterList() {
   return (
@@ -50,9 +50,18 @@ export function Generate() {
   const [collateralName, setCollateralName] = useState('')
   const [selectedCollaterals, setSelectedCollaterals] = useKV('generate-selected-collaterals', [] as string[])
   
-  // Document grid state - simplified without column filters
+  // Document grid state with enhanced filtering
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  
+  // Column filters for search and filtering
+  const [columnFilters, setColumnFilters] = useState({
+    documentName: '',
+    planType: '',
+    egwp: '',
+    folderName: '',
+    folderVersion: ''
+  })
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
@@ -124,9 +133,27 @@ export function Generate() {
     { id: 'H0169030000', name: 'H0169030000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169030000', folderVersion: '2026_0.01' }
   ]
   
-  // Filter and sort documents - simplified without text filters
+  // Filter and sort documents with enhanced filtering
   const filteredAndSortedDocuments = useMemo(() => {
-    let filtered = [...documents] // Start with all documents since no filters
+    let filtered = documents.filter(document => {
+      // Apply column filters
+      if (columnFilters.documentName && !document.name.toLowerCase().includes(columnFilters.documentName.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.planType && !document.planType.toLowerCase().includes(columnFilters.planType.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.egwp && columnFilters.egwp !== 'all' && document.egwp !== columnFilters.egwp) {
+        return false
+      }
+      if (columnFilters.folderName && !document.folderName.toLowerCase().includes(columnFilters.folderName.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.folderVersion && !document.folderVersion.toLowerCase().includes(columnFilters.folderVersion.toLowerCase())) {
+        return false
+      }
+      return true
+    })
     
     if (sortField) {
       filtered.sort((a, b) => {
@@ -142,7 +169,7 @@ export function Generate() {
     }
     
     return filtered
-  }, [documents, sortField, sortDirection])
+  }, [documents, sortField, sortDirection, columnFilters])
   
   // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedDocuments.length / pageSize)
@@ -150,10 +177,10 @@ export function Generate() {
   const endIndex = startIndex + pageSize
   const currentPageDocuments = filteredAndSortedDocuments.slice(startIndex, endIndex)
   
-  // Reset to page 1 when sort changes
+  // Reset to page 1 when sort or filters change
   useMemo(() => {
     setCurrentPage(1)
-  }, [sortField, sortDirection])
+  }, [sortField, sortDirection, columnFilters])
   
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
@@ -183,6 +210,30 @@ export function Generate() {
       setSortField(field)
       setSortDirection('asc')
     }
+  }
+
+  const updateColumnFilter = (column: string, value: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: value
+    }))
+  }
+
+  const clearColumnFilter = (column: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: ''
+    }))
+  }
+
+  const clearAllFilters = () => {
+    setColumnFilters({
+      documentName: '',
+      planType: '',
+      egwp: '',
+      folderName: '',
+      folderVersion: ''
+    })
   }
   
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
@@ -388,11 +439,32 @@ export function Generate() {
                 </CardHeader>
                 
                 <CardContent>
+                  {/* Filter Summary and Clear All */}
+                  {Object.values(columnFilters).some(filter => filter !== '') && (
+                    <div className="flex items-center justify-between mb-4 p-3 bg-blue-50 rounded-lg border">
+                      <div className="flex items-center gap-2">
+                        <Funnel size={16} className="text-blue-600" />
+                        <span className="text-sm font-medium text-blue-800">
+                          Active Filters: {Object.values(columnFilters).filter(filter => filter !== '').length}
+                        </span>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={clearAllFilters}
+                        className="text-blue-600 hover:text-blue-700"
+                      >
+                        Clear All
+                      </Button>
+                    </div>
+                  )}
+
                   <div className="border rounded-lg">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-white">
-                          <TableHead className="w-12">
+                        {/* Column Headers with Sort */}
+                        <TableRow className="bg-muted/50">
+                          <TableHead className="w-12 border-r">
                             <Checkbox
                               checked={isAllVisibleSelected}
                               onCheckedChange={handleSelectAll}
@@ -402,8 +474,8 @@ export function Generate() {
                             />
                           </TableHead>
                           {visibleColumns.documentName && (
-                            <TableHead>
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
+                            <TableHead className="border-r">
+                              <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('name')}>
                                 Document Name
                                 {sortField === 'name' && (
                                   sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
@@ -412,8 +484,8 @@ export function Generate() {
                             </TableHead>
                           )}
                           {visibleColumns.planType && (
-                            <TableHead>
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
+                            <TableHead className="border-r">
+                              <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('planType')}>
                                 Plan Type
                                 {sortField === 'planType' && (
                                   sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
@@ -422,8 +494,8 @@ export function Generate() {
                             </TableHead>
                           )}
                           {visibleColumns.egwp && (
-                            <TableHead>
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
+                            <TableHead className="border-r">
+                              <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('egwp')}>
                                 EGWP
                                 {sortField === 'egwp' && (
                                   sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
@@ -432,8 +504,8 @@ export function Generate() {
                             </TableHead>
                           )}
                           {visibleColumns.folderName && (
-                            <TableHead>
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
+                            <TableHead className="border-r">
+                              <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderName')}>
                                 Folder Name
                                 {sortField === 'folderName' && (
                                   sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
@@ -443,10 +515,126 @@ export function Generate() {
                           )}
                           {visibleColumns.folderVersion && (
                             <TableHead>
-                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
+                              <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderVersion')}>
                                 Folder Version Number
                                 {sortField === 'folderVersion' && (
                                   sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                        </TableRow>
+
+                        {/* Filter Row */}
+                        <TableRow className="bg-white border-b-2">
+                          <TableHead className="p-2 border-r">
+                            {/* Empty cell for checkbox column */}
+                          </TableHead>
+                          {visibleColumns.documentName && (
+                            <TableHead className="p-2 border-r">
+                              <div className="relative">
+                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                  placeholder="Search documents..."
+                                  value={columnFilters.documentName}
+                                  onChange={(e) => updateColumnFilter('documentName', e.target.value)}
+                                  className="pl-9 h-8 text-sm"
+                                />
+                                {columnFilters.documentName && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    onClick={() => clearColumnFilter('documentName')}
+                                  >
+                                    <X size={12} />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.planType && (
+                            <TableHead className="p-2 border-r">
+                              <div className="relative">
+                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                  placeholder="Filter plan type..."
+                                  value={columnFilters.planType}
+                                  onChange={(e) => updateColumnFilter('planType', e.target.value)}
+                                  className="pl-9 h-8 text-sm"
+                                />
+                                {columnFilters.planType && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    onClick={() => clearColumnFilter('planType')}
+                                  >
+                                    <X size={12} />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.egwp && (
+                            <TableHead className="p-2 border-r">
+                              <Select 
+                                value={columnFilters.egwp || 'all'} 
+                                onValueChange={(value) => updateColumnFilter('egwp', value === 'all' ? '' : value)}
+                              >
+                                <SelectTrigger className="h-8 text-sm">
+                                  <SelectValue placeholder="Filter EGWP" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">All</SelectItem>
+                                  <SelectItem value="Yes">Yes</SelectItem>
+                                  <SelectItem value="No">No</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableHead>
+                          )}
+                          {visibleColumns.folderName && (
+                            <TableHead className="p-2 border-r">
+                              <div className="relative">
+                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                  placeholder="Filter folder..."
+                                  value={columnFilters.folderName}
+                                  onChange={(e) => updateColumnFilter('folderName', e.target.value)}
+                                  className="pl-9 h-8 text-sm"
+                                />
+                                {columnFilters.folderName && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    onClick={() => clearColumnFilter('folderName')}
+                                  >
+                                    <X size={12} />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.folderVersion && (
+                            <TableHead className="p-2">
+                              <div className="relative">
+                                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                  placeholder="Filter version..."
+                                  value={columnFilters.folderVersion}
+                                  onChange={(e) => updateColumnFilter('folderVersion', e.target.value)}
+                                  className="pl-9 h-8 text-sm"
+                                />
+                                {columnFilters.folderVersion && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                                    onClick={() => clearColumnFilter('folderVersion')}
+                                  >
+                                    <X size={12} />
+                                  </Button>
                                 )}
                               </div>
                             </TableHead>
@@ -456,14 +644,24 @@ export function Generate() {
                       <TableBody>
                         {currentPageDocuments.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-8 text-muted-foreground">
-                              No documents available
+                            <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-12 text-muted-foreground">
+                              {Object.values(columnFilters).some(filter => filter !== '') 
+                                ? "No documents match the current filters" 
+                                : "No documents available"
+                              }
                             </TableCell>
                           </TableRow>
                         ) : (
-                          currentPageDocuments.map((document) => (
-                            <TableRow key={document.id} className={selectedDocuments.includes(document.id) ? 'bg-blue-50' : ''}>
-                              <TableCell>
+                          currentPageDocuments.map((document, index) => (
+                            <TableRow 
+                              key={document.id} 
+                              className={`
+                                ${selectedDocuments.includes(document.id) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
+                                ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
+                                border-b transition-colors
+                              `}
+                            >
+                              <TableCell className="border-r">
                                 <Checkbox
                                   checked={selectedDocuments.includes(document.id)}
                                   onCheckedChange={(checked) => 
@@ -472,32 +670,41 @@ export function Generate() {
                                 />
                               </TableCell>
                               {visibleColumns.documentName && (
-                                <TableCell className="font-mono text-blue-600">
+                                <TableCell className="font-mono text-blue-600 font-medium border-r">
                                   {document.name}
                                 </TableCell>
                               )}
                               {visibleColumns.planType && (
-                                <TableCell>
-                                  {document.planType && (
-                                    <Badge variant="outline">{document.planType}</Badge>
+                                <TableCell className="border-r">
+                                  {document.planType ? (
+                                    <Badge variant="outline" className="font-medium">
+                                      {document.planType}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-muted-foreground text-sm italic">—</span>
                                   )}
                                 </TableCell>
                               )}
                               {visibleColumns.egwp && (
-                                <TableCell>
-                                  <Badge variant={document.egwp === 'Yes' ? 'default' : 'secondary'}>
+                                <TableCell className="border-r">
+                                  <Badge 
+                                    variant={document.egwp === 'Yes' ? 'default' : 'secondary'}
+                                    className={document.egwp === 'Yes' ? 'bg-green-100 text-green-800 border-green-300' : ''}
+                                  >
                                     {document.egwp}
                                   </Badge>
                                 </TableCell>
                               )}
                               {visibleColumns.folderName && (
-                                <TableCell className="font-mono">
+                                <TableCell className="font-mono text-sm border-r">
                                   {document.folderName}
                                 </TableCell>
                               )}
                               {visibleColumns.folderVersion && (
-                                <TableCell className="font-mono">
-                                  {document.folderVersion}
+                                <TableCell className="font-mono text-sm">
+                                  <Badge variant="outline" className="font-mono text-xs">
+                                    {document.folderVersion}
+                                  </Badge>
                                 </TableCell>
                               )}
                             </TableRow>
@@ -507,11 +714,16 @@ export function Generate() {
                     </Table>
                   </div>
                   
-                  {/* Pagination Controls - Below the grid */}
+                  {/* Enhanced Pagination Controls */}
                   <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-4">
                       <span>
-                        View {startIndex + 1} - {Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length}
+                        Showing {startIndex + 1} - {Math.min(endIndex, filteredAndSortedDocuments.length)} of {filteredAndSortedDocuments.length}
+                        {documents.length !== filteredAndSortedDocuments.length && (
+                          <span className="text-blue-600 font-medium">
+                            {' '}(filtered from {documents.length} total)
+                          </span>
+                        )}
                         {selectedDocuments.length > 0 && (
                           <Badge variant="secondary" className="ml-2">
                             {selectedDocuments.length} selected
@@ -532,23 +744,23 @@ export function Generate() {
                           <CaretLeft size={14} />
                         </Button>
                         
-                        <span className="text-sm">Page</span>
-                        
-                        <Input
-                          type="number"
-                          min="1"
-                          max={totalPages}
-                          value={currentPage}
-                          onChange={(e) => {
-                            const page = parseInt(e.target.value)
-                            if (page >= 1 && page <= totalPages) {
-                              setCurrentPage(page)
-                            }
-                          }}
-                          className="w-16 h-8 text-center text-sm"
-                        />
-                        
-                        <span className="text-sm">of {totalPages}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Page</span>
+                          <Input
+                            type="number"
+                            min="1"
+                            max={totalPages}
+                            value={currentPage}
+                            onChange={(e) => {
+                              const page = parseInt(e.target.value)
+                              if (page >= 1 && page <= totalPages) {
+                                setCurrentPage(page)
+                              }
+                            }}
+                            className="w-16 h-8 text-center text-sm"
+                          />
+                          <span className="text-sm">of {totalPages}</span>
+                        </div>
                         
                         <Button
                           variant="ghost"
