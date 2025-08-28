@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, FloppyDisk, UploadSimple, Stop } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple } from "@phosphor-icons/react"
 
 // QueuedCollateral component implementation
 function QueuedCollateral() {
@@ -574,7 +574,7 @@ function QueuedCollateral() {
           className="h-8 px-2" 
           title="Download excel errors"
         >
-          <FloppyDisk size={14} />
+          <WarningCircle size={14} />
         </Button>
         <Button 
           variant="outline" 
@@ -590,7 +590,7 @@ function QueuedCollateral() {
           className="h-8 px-2" 
           title="Terminate"
         >
-          <Stop size={14} />
+          <X size={14} />
         </Button>
       </div>
       
