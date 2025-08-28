@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight } from "@phosphor-icons/react"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns } from "@phosphor-icons/react"
 
 export function MasterList() {
   return (
@@ -56,6 +57,31 @@ export function Generate() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useKV('generate-visible-columns', {
+    documentName: true,
+    planType: true,
+    egwp: true,
+    folderName: true,
+    folderVersion: true
+  })
+  
+  // Available columns configuration
+  const availableColumns = [
+    { key: 'documentName', label: 'Document Name' },
+    { key: 'planType', label: 'Plan Type' },
+    { key: 'egwp', label: 'EGWP' },
+    { key: 'folderName', label: 'Folder Name' },
+    { key: 'folderVersion', label: 'Folder Version Number' }
+  ]
+  
+  const toggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns((current: any) => ({
+      ...current,
+      [columnKey]: !current[columnKey]
+    }))
+  }
   
   // Sample data matching the screenshot
   const collateralOptions = [
@@ -331,7 +357,26 @@ export function Generate() {
               {/* Right Panel - Document Selection */}
               <Card>
                 <CardHeader className="pb-3">
-                  <div className="flex items-center justify-end">                    
+                  <div className="flex items-center justify-end gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="flex items-center gap-2">
+                          <Columns size={16} />
+                          Columns
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        {availableColumns.map((column) => (
+                          <DropdownMenuCheckboxItem
+                            key={column.key}
+                            checked={visibleColumns[column.key]}
+                            onCheckedChange={() => toggleColumnVisibility(column.key)}
+                          >
+                            {column.label}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <Button className="bg-blue-600 hover:bg-blue-700">
                       Queue
                     </Button>
@@ -356,52 +401,62 @@ export function Generate() {
                               }}
                             />
                           </TableHead>
-                          <TableHead>
-                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
-                              Document Name
-                              {sortField === 'name' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
-                              Plan Type
-                              {sortField === 'planType' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
-                              EGWP
-                              {sortField === 'egwp' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
-                              Folder Name
-                              {sortField === 'folderName' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead>
-                            <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
-                              Folder Version Number
-                              {sortField === 'folderVersion' && (
-                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
-                              )}
-                            </div>
-                          </TableHead>
+                          {visibleColumns.documentName && (
+                            <TableHead>
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('name')}>
+                                Document Name
+                                {sortField === 'name' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.planType && (
+                            <TableHead>
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('planType')}>
+                                Plan Type
+                                {sortField === 'planType' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.egwp && (
+                            <TableHead>
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('egwp')}>
+                                EGWP
+                                {sortField === 'egwp' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.folderName && (
+                            <TableHead>
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderName')}>
+                                Folder Name
+                                {sortField === 'folderName' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
+                          {visibleColumns.folderVersion && (
+                            <TableHead>
+                              <div className="flex items-center gap-1 cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
+                                Folder Version Number
+                                {sortField === 'folderVersion' && (
+                                  sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                                )}
+                              </div>
+                            </TableHead>
+                          )}
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {currentPageDocuments.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                            <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-8 text-muted-foreground">
                               No documents available
                             </TableCell>
                           </TableRow>
@@ -416,25 +471,35 @@ export function Generate() {
                                   }
                                 />
                               </TableCell>
-                              <TableCell className="font-mono text-blue-600">
-                                {document.name}
-                              </TableCell>
-                              <TableCell>
-                                {document.planType && (
-                                  <Badge variant="outline">{document.planType}</Badge>
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={document.egwp === 'Yes' ? 'default' : 'secondary'}>
-                                  {document.egwp}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="font-mono">
-                                {document.folderName}
-                              </TableCell>
-                              <TableCell className="font-mono">
-                                {document.folderVersion}
-                              </TableCell>
+                              {visibleColumns.documentName && (
+                                <TableCell className="font-mono text-blue-600">
+                                  {document.name}
+                                </TableCell>
+                              )}
+                              {visibleColumns.planType && (
+                                <TableCell>
+                                  {document.planType && (
+                                    <Badge variant="outline">{document.planType}</Badge>
+                                  )}
+                                </TableCell>
+                              )}
+                              {visibleColumns.egwp && (
+                                <TableCell>
+                                  <Badge variant={document.egwp === 'Yes' ? 'default' : 'secondary'}>
+                                    {document.egwp}
+                                  </Badge>
+                                </TableCell>
+                              )}
+                              {visibleColumns.folderName && (
+                                <TableCell className="font-mono">
+                                  {document.folderName}
+                                </TableCell>
+                              )}
+                              {visibleColumns.folderVersion && (
+                                <TableCell className="font-mono">
+                                  {document.folderVersion}
+                                </TableCell>
+                              )}
                             </TableRow>
                           ))
                         )}
