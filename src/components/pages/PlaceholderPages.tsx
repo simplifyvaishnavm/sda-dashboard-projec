@@ -1270,8 +1270,6 @@ function CollaborateMain() {
     collaborators: '',
     productLink: '',
     reviewSummary: '',
-    previousVersion: '',
-    assignedTo: '',
     reviewersInvolved: ''
   })
   
@@ -1289,8 +1287,6 @@ function CollaborateMain() {
     collaborators: true,
     productLink: true,
     reviewSummary: true,
-    previousVersion: true,
-    assignedTo: true,
     reviewersInvolved: true
   })
   
@@ -1309,8 +1305,6 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'prashant kumar',
-      assignedTo: 'prashant kumar akshay deshmukh',
       reviewersInvolved: 'prashant kur...'
     },
     {
@@ -1326,8 +1320,6 @@ function CollaborateMain() {
       collaborators: '1.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'prashant kumar',
-      assignedTo: 'prashant kumar',
       reviewersInvolved: 'prashant kur...'
     },
     {
@@ -1343,8 +1335,6 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'vaibhav kharat',
-      assignedTo: 'vaibhav kharat akshay deshmukh',
       reviewersInvolved: 'vaibhav kharat'
     },
     {
@@ -1360,8 +1350,6 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'vaibhav kharat akshay...',
-      assignedTo: 'vaibhav kharat akshay deshmukh',
       reviewersInvolved: 'akshay desh...'
     },
     {
@@ -1377,8 +1365,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'bgail',
-      assignedTo: 'neha shirastava bigail',
       reviewersInvolved: 'bgail'
     },
     {
@@ -1394,8 +1380,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'neha shirastava',
-      assignedTo: 'neha shirastava',
       reviewersInvolved: 'neha shirastav...'
     },
     {
@@ -1411,8 +1395,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'neha shirastava',
-      assignedTo: 'neha shirastava',
       reviewersInvolved: 'neha shirastav...'
     },
     {
@@ -1428,8 +1410,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'neha shirastava',
-      assignedTo: 'neha shirastava',
       reviewersInvolved: 'neha shirastav...'
     },
     {
@@ -1445,8 +1425,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'neha shirastava',
-      assignedTo: 'neha shirastava',
       reviewersInvolved: 'neha shirastav...'
     },
     {
@@ -1462,8 +1440,6 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      previousVersion: 'neha shirastava',
-      assignedTo: 'neha shirastava',
       reviewersInvolved: 'neha shirastav...'
     }
   ]
@@ -1482,8 +1458,6 @@ function CollaborateMain() {
     { key: 'collaborators', label: 'Collaborators' },
     { key: 'productLink', label: 'Product Link' },
     { key: 'reviewSummary', label: 'Review Summary' },
-    { key: 'previousVersion', label: 'Previous Version' },
-    { key: 'assignedTo', label: 'Assigned To' },
     { key: 'reviewersInvolved', label: 'Reviewers Involved' }
   ]
   
@@ -1522,12 +1496,6 @@ function CollaborateMain() {
         return false
       }
       if (columnFilters.reviewSummary && !item.reviewSummary.toLowerCase().includes(columnFilters.reviewSummary.toLowerCase())) {
-        return false
-      }
-      if (columnFilters.previousVersion && !item.previousVersion.toLowerCase().includes(columnFilters.previousVersion.toLowerCase())) {
-        return false
-      }
-      if (columnFilters.assignedTo && !item.assignedTo.toLowerCase().includes(columnFilters.assignedTo.toLowerCase())) {
         return false
       }
       if (columnFilters.reviewersInvolved && !item.reviewersInvolved.toLowerCase().includes(columnFilters.reviewersInvolved.toLowerCase())) {
@@ -1803,26 +1771,6 @@ function CollaborateMain() {
                       </div>
                     </TableHead>
                   )}
-                  {visibleColumns.previousVersion && (
-                    <TableHead className="border-r h-11 min-w-[140px]">
-                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('previousVersion')}>
-                        Previous Version
-                        {sortField === 'previousVersion' && (
-                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.assignedTo && (
-                    <TableHead className="border-r h-11 min-w-[180px]">
-                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('assignedTo')}>
-                        Assigned To
-                        {sortField === 'assignedTo' && (
-                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
                   {visibleColumns.reviewersInvolved && (
                     <TableHead className="border-r h-11 min-w-[160px]">
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('reviewersInvolved')}>
@@ -2087,50 +2035,6 @@ function CollaborateMain() {
                       </div>
                     </TableHead>
                   )}
-                  {visibleColumns.previousVersion && (
-                    <TableHead className="p-2 border-r">
-                      <div className="relative">
-                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          value={columnFilters.previousVersion}
-                          onChange={(e) => updateColumnFilter('previousVersion', e.target.value)}
-                          className="pl-9 h-8 text-sm"
-                        />
-                        {columnFilters.previousVersion && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                            onClick={() => clearColumnFilter('previousVersion')}
-                          >
-                            <X size={12} />
-                          </Button>
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.assignedTo && (
-                    <TableHead className="p-2 border-r">
-                      <div className="relative">
-                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          value={columnFilters.assignedTo}
-                          onChange={(e) => updateColumnFilter('assignedTo', e.target.value)}
-                          className="pl-9 h-8 text-sm"
-                        />
-                        {columnFilters.assignedTo && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                            onClick={() => clearColumnFilter('assignedTo')}
-                          >
-                            <X size={12} />
-                          </Button>
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
                   {visibleColumns.reviewersInvolved && (
                     <TableHead className="p-2 border-r">
                       <div className="relative">
@@ -2253,16 +2157,6 @@ function CollaborateMain() {
                           {item.reviewSummary || (
                             <span className="text-muted-foreground italic">—</span>
                           )}
-                        </TableCell>
-                      )}
-                      {visibleColumns.previousVersion && (
-                        <TableCell className="border-r p-3 text-sm max-w-36 truncate" title={item.previousVersion}>
-                          {item.previousVersion}
-                        </TableCell>
-                      )}
-                      {visibleColumns.assignedTo && (
-                        <TableCell className="border-r p-3 text-sm max-w-44 truncate" title={item.assignedTo}>
-                          {item.assignedTo}
                         </TableCell>
                       )}
                       {visibleColumns.reviewersInvolved && (
