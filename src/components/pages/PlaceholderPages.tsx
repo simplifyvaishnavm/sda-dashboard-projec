@@ -51,8 +51,6 @@ export function Generate() {
   
   // Document grid state
   const [searchTerm, setSearchTerm] = useState('')
-  const [planTypeFilter, setPlanTypeFilter] = useState('all')
-  const [egwpFilter, setEgwpFilter] = useState('all')
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   
@@ -101,10 +99,6 @@ export function Generate() {
     { id: 'H0169030000', name: 'H0169030000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169030000', folderVersion: '2026_0.01' }
   ]
   
-  // Get unique values for filters
-  const planTypes = [...new Set(documents.map(doc => doc.planType).filter(Boolean))]
-  const egwpOptions = [...new Set(documents.map(doc => doc.egwp))]
-  
   // Filter and sort documents
   const filteredAndSortedDocuments = useMemo(() => {
     let filtered = documents.filter(doc => {
@@ -113,10 +107,7 @@ export function Generate() {
         doc.folderName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doc.planType.toLowerCase().includes(searchTerm.toLowerCase())
       
-      const matchesPlanType = planTypeFilter === 'all' || doc.planType === planTypeFilter
-      const matchesEgwp = egwpFilter === 'all' || doc.egwp === egwpFilter
-      
-      return matchesSearch && matchesPlanType && matchesEgwp
+      return matchesSearch
     })
     
     if (sortField) {
@@ -133,7 +124,7 @@ export function Generate() {
     }
     
     return filtered
-  }, [documents, searchTerm, planTypeFilter, egwpFilter, sortField, sortDirection])
+  }, [documents, searchTerm, sortField, sortDirection])
   
   // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedDocuments.length / pageSize)
@@ -144,7 +135,7 @@ export function Generate() {
   // Reset to page 1 when filters change
   useMemo(() => {
     setCurrentPage(1)
-  }, [searchTerm, planTypeFilter, egwpFilter, sortField, sortDirection])
+  }, [searchTerm, sortField, sortDirection])
   
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
@@ -167,21 +158,6 @@ export function Generate() {
     }
   }
   
-  const handleSelectAllFiltered = () => {
-    const allFilteredIds = filteredAndSortedDocuments.map(doc => doc.id)
-    setSelectedDocuments((current: string[]) => {
-      const newSet = new Set([...current, ...allFilteredIds])
-      return Array.from(newSet)
-    })
-  }
-  
-  const handleDeselectAllFiltered = () => {
-    const filteredIds = new Set(filteredAndSortedDocuments.map(doc => doc.id))
-    setSelectedDocuments((current: string[]) => 
-      current.filter(id => !filteredIds.has(id))
-    )
-  }
-  
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
@@ -193,8 +169,6 @@ export function Generate() {
   
   const clearFilters = () => {
     setSearchTerm('')
-    setPlanTypeFilter('all')
-    setEgwpFilter('all')
     setSortField(null)
     setSortDirection('asc')
     setCurrentPage(1)
@@ -381,7 +355,7 @@ export function Generate() {
                   <CardTitle className="text-lg flex items-center justify-between mt-4">
                     Select Documents
                     <div className="flex items-center gap-2">
-                      {(searchTerm || planTypeFilter !== 'all' || egwpFilter !== 'all' || sortField) && (
+                      {(searchTerm || sortField) && (
                         <Button variant="outline" size="sm" onClick={clearFilters}>
                           Clear Filters
                         </Button>
@@ -412,36 +386,6 @@ export function Generate() {
                       <div className="flex items-center gap-2">
                         <FunnelSimple size={16} className="text-muted-foreground" />
                         <span className="text-sm font-medium">Filters:</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor="plan-type-filter" className="text-sm whitespace-nowrap">Plan Type</Label>
-                        <Select value={planTypeFilter} onValueChange={setPlanTypeFilter}>
-                          <SelectTrigger className="w-36" id="plan-type-filter">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
-                            {planTypes.map(type => (
-                              <SelectItem key={type} value={type}>{type}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor="egwp-filter" className="text-sm whitespace-nowrap">EGWP</Label>
-                        <Select value={egwpFilter} onValueChange={setEgwpFilter}>
-                          <SelectTrigger className="w-24" id="egwp-filter">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All</SelectItem>
-                            {egwpOptions.map(option => (
-                              <SelectItem key={option} value={option}>{option}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                       </div>
                     </div>
                     
@@ -477,27 +421,6 @@ export function Generate() {
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        {filteredAndSortedDocuments.length > currentPageDocuments.length && (
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={handleSelectAllFiltered}
-                              className="h-7 px-2 text-xs"
-                            >
-                              Select All {filteredAndSortedDocuments.length}
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={handleDeselectAllFiltered}
-                              className="h-7 px-2 text-xs"
-                            >
-                              Deselect All
-                            </Button>
-                          </div>
-                        )}
-                        
                         {sortField && (
                           <div className="flex items-center gap-1">
                             <span>Sorted by {sortField}</span>
