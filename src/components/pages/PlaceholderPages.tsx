@@ -545,70 +545,63 @@ function QueuedCollateral() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          {/* Action buttons with consistent sizing and spacing */}
+          {/* Action buttons - icons only */}
           <div className="flex items-center gap-2">
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
+              className="h-9 w-9 p-0" 
               title="Refresh"
             >
               <ArrowClockwise size={16} />
-              <span className="hidden md:inline">Refresh</span>
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
+              className="h-9 w-9 p-0" 
               title="Requeue Segmented EOC"
             >
               <Queue size={16} />
-              <span className="hidden lg:inline">Requeue EOC</span>
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
+              className="h-9 w-9 p-0" 
               title="Requeue 508 validations"
             >
-              <ArrowClockwise size={16} />
-              <span className="hidden lg:inline">508 Validation</span>
+              <WarningCircle size={16} />
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
-              title="Blk download"
+              className="h-9 w-9 p-0" 
+              title="Bulk download"
             >
               <Download size={16} />
-              <span className="hidden lg:inline">Download</span>
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
+              className="h-9 w-9 p-0" 
               title="Download excel errors"
             >
               <WarningCircle size={16} />
-              <span className="hidden lg:inline">Errors</span>
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2" 
+              className="h-9 w-9 p-0" 
               title="Upload"
             >
               <UploadSimple size={16} />
-              <span className="hidden md:inline">Upload</span>
             </Button>
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-9 px-3 flex items-center gap-2 text-destructive hover:text-destructive" 
+              className="h-9 w-9 p-0 text-destructive hover:bg-destructive hover:text-destructive-foreground" 
               title="Terminate"
             >
               <X size={16} />
-              <span className="hidden md:inline">Terminate</span>
             </Button>
           </div>
         </div>
