@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { FileText, Clock, BarChart3, X } from "@phosphor-icons/react"
+import { Badge } from "@/components/ui/badge"
+import { FileText, Clock, BarChart3, X, MagnifyingGlass, FunnelSimple, SortAscending, SortDescending, CaretUp, CaretDown } from "@phosphor-icons/react"
 
 export function MasterList() {
   return (
@@ -48,6 +49,13 @@ export function Generate() {
   const [collateralName, setCollateralName] = useState('')
   const [selectedCollaterals, setSelectedCollaterals] = useKV('generate-selected-collaterals', [] as string[])
   
+  // Document grid state
+  const [searchTerm, setSearchTerm] = useState('')
+  const [planTypeFilter, setPlanTypeFilter] = useState('all')
+  const [egwpFilter, setEgwpFilter] = useState('all')
+  const [sortField, setSortField] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  
   // Sample data matching the screenshot
   const collateralOptions = [
     'Medicare ANOC',
@@ -64,8 +72,45 @@ export function Generate() {
     { id: 'H0169004000', name: 'H0169004000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169004000', folderVersion: '2026_0.01' },
     { id: 'H0169006000', name: 'H0169006000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169006000', folderVersion: '2026_0.01' },
     { id: 'H0169008000', name: 'H0169008000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169008000', folderVersion: '2026_0.01' },
-    { id: 'H0169009000', name: 'H0169009000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169009000', folderVersion: '2026_0.01' }
+    { id: 'H0169009000', name: 'H0169009000', planType: 'HMOPOS', egwp: 'No', folderName: 'H0169009000', folderVersion: '2026_0.01' },
+    { id: 'H0169010000', name: 'H0169010000', planType: 'HMO', egwp: 'Yes', folderName: 'H0169010000', folderVersion: '2026_0.01' },
+    { id: 'H0169011000', name: 'H0169011000', planType: 'PPO', egwp: 'Yes', folderName: 'H0169011000', folderVersion: '2026_0.01' },
+    { id: 'H0169012000', name: 'H0169012000', planType: 'Local PPO', egwp: 'No', folderName: 'H0169012000', folderVersion: '2026_0.02' }
   ]
+  
+  // Get unique values for filters
+  const planTypes = [...new Set(documents.map(doc => doc.planType).filter(Boolean))]
+  const egwpOptions = [...new Set(documents.map(doc => doc.egwp))]
+  
+  // Filter and sort documents
+  const filteredAndSortedDocuments = useMemo(() => {
+    let filtered = documents.filter(doc => {
+      const matchesSearch = !searchTerm || 
+        doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.folderName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.planType.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchesPlanType = planTypeFilter === 'all' || doc.planType === planTypeFilter
+      const matchesEgwp = egwpFilter === 'all' || doc.egwp === egwpFilter
+      
+      return matchesSearch && matchesPlanType && matchesEgwp
+    })
+    
+    if (sortField) {
+      filtered.sort((a, b) => {
+        const aValue = a[sortField as keyof typeof a] || ''
+        const bValue = b[sortField as keyof typeof b] || ''
+        
+        if (sortDirection === 'asc') {
+          return aValue.toString().localeCompare(bValue.toString())
+        } else {
+          return bValue.toString().localeCompare(aValue.toString())
+        }
+      })
+    }
+    
+    return filtered
+  }, [documents, searchTerm, planTypeFilter, egwpFilter, sortField, sortDirection])
   
   const handleDocumentSelect = (docId: string, checked: boolean) => {
     setSelectedDocuments((current: string[]) => 
@@ -73,11 +118,48 @@ export function Generate() {
     )
   }
   
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allVisibleIds = filteredAndSortedDocuments.map(doc => doc.id)
+      setSelectedDocuments((current: string[]) => {
+        const newSet = new Set([...current, ...allVisibleIds])
+        return Array.from(newSet)
+      })
+    } else {
+      const visibleIds = new Set(filteredAndSortedDocuments.map(doc => doc.id))
+      setSelectedDocuments((current: string[]) => 
+        current.filter(id => !visibleIds.has(id))
+      )
+    }
+  }
+  
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+  
+  const clearFilters = () => {
+    setSearchTerm('')
+    setPlanTypeFilter('all')
+    setEgwpFilter('all')
+    setSortField(null)
+    setSortDirection('asc')
+  }
+  
   const handleCollateralSelect = (collateral: string, checked: boolean) => {
     setSelectedCollaterals((current: string[]) => 
       checked ? [...current, collateral] : current.filter(c => c !== collateral)
     )
   }
+  
+  const isAllVisibleSelected = filteredAndSortedDocuments.length > 0 && 
+    filteredAndSortedDocuments.every(doc => selectedDocuments.includes(doc.id))
+  
+  const isSomeVisibleSelected = filteredAndSortedDocuments.some(doc => selectedDocuments.includes(doc.id))
 
   return (
     <div className="p-8">
@@ -248,49 +330,190 @@ export function Generate() {
                   
                   <CardTitle className="text-lg flex items-center justify-between mt-4">
                     Select Documents
-                    <Button variant="ghost" size="sm">
-                      <X size={16} />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {(searchTerm || planTypeFilter !== 'all' || egwpFilter !== 'all' || sortField) && (
+                        <Button variant="outline" size="sm" onClick={clearFilters}>
+                          Clear Filters
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="sm">
+                        <X size={16} />
+                      </Button>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 
                 <CardContent>
+                  {/* Search and Filters */}
+                  <div className="space-y-4 mb-4">
+                    {/* Search Bar */}
+                    <div className="relative">
+                      <MagnifyingGlass className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search documents, folder names, or plan types..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    
+                    {/* Filter Row */}
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <FunnelSimple size={16} className="text-muted-foreground" />
+                        <span className="text-sm font-medium">Filters:</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="plan-type-filter" className="text-sm whitespace-nowrap">Plan Type</Label>
+                        <Select value={planTypeFilter} onValueChange={setPlanTypeFilter}>
+                          <SelectTrigger className="w-36" id="plan-type-filter">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Types</SelectItem>
+                            {planTypes.map(type => (
+                              <SelectItem key={type} value={type}>{type}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor="egwp-filter" className="text-sm whitespace-nowrap">EGWP</Label>
+                        <Select value={egwpFilter} onValueChange={setEgwpFilter}>
+                          <SelectTrigger className="w-24" id="egwp-filter">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All</SelectItem>
+                            {egwpOptions.map(option => (
+                              <SelectItem key={option} value={option}>{option}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    {/* Results Summary */}
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span>
+                        Showing {filteredAndSortedDocuments.length} of {documents.length} documents
+                        {selectedDocuments.length > 0 && (
+                          <Badge variant="secondary" className="ml-2">
+                            {selectedDocuments.length} selected
+                          </Badge>
+                        )}
+                      </span>
+                      
+                      {sortField && (
+                        <div className="flex items-center gap-1">
+                          <span>Sorted by {sortField}</span>
+                          {sortDirection === 'asc' ? (
+                            <SortAscending size={14} />
+                          ) : (
+                            <SortDescending size={14} />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
                   <div className="border rounded-lg">
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-muted/50">
-                          <TableHead className="w-12"></TableHead>
-                          <TableHead>Document Name</TableHead>
-                          <TableHead>Plan Type</TableHead>
-                          <TableHead>EGWP</TableHead>
-                          <TableHead>Folder Name</TableHead>
-                          <TableHead>Folder Version Number</TableHead>
+                          <TableHead className="w-12">
+                            <Checkbox
+                              checked={isAllVisibleSelected}
+                              onCheckedChange={handleSelectAll}
+                              ref={(el) => {
+                                if (el) el.indeterminate = isSomeVisibleSelected && !isAllVisibleSelected
+                              }}
+                            />
+                          </TableHead>
+                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('name')}>
+                            <div className="flex items-center gap-1">
+                              Document Name
+                              {sortField === 'name' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
+                            </div>
+                          </TableHead>
+                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('planType')}>
+                            <div className="flex items-center gap-1">
+                              Plan Type
+                              {sortField === 'planType' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
+                            </div>
+                          </TableHead>
+                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('egwp')}>
+                            <div className="flex items-center gap-1">
+                              EGWP
+                              {sortField === 'egwp' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
+                            </div>
+                          </TableHead>
+                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('folderName')}>
+                            <div className="flex items-center gap-1">
+                              Folder Name
+                              {sortField === 'folderName' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
+                            </div>
+                          </TableHead>
+                          <TableHead className="cursor-pointer select-none" onClick={() => handleSort('folderVersion')}>
+                            <div className="flex items-center gap-1">
+                              Folder Version Number
+                              {sortField === 'folderVersion' && (
+                                sortDirection === 'asc' ? <CaretUp size={14} /> : <CaretDown size={14} />
+                              )}
+                            </div>
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {documents.map((document) => (
-                          <TableRow key={document.id}>
-                            <TableCell>
-                              <Checkbox
-                                checked={selectedDocuments.includes(document.id)}
-                                onCheckedChange={(checked) => 
-                                  handleDocumentSelect(document.id, checked as boolean)
-                                }
-                              />
-                            </TableCell>
-                            <TableCell className="font-mono text-blue-600">
-                              {document.name}
-                            </TableCell>
-                            <TableCell>{document.planType}</TableCell>
-                            <TableCell>{document.egwp}</TableCell>
-                            <TableCell className="font-mono">
-                              {document.folderName}
-                            </TableCell>
-                            <TableCell className="font-mono">
-                              {document.folderVersion}
+                        {filteredAndSortedDocuments.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                              No documents match your search criteria
                             </TableCell>
                           </TableRow>
-                        ))}
+                        ) : (
+                          filteredAndSortedDocuments.map((document) => (
+                            <TableRow key={document.id} className={selectedDocuments.includes(document.id) ? 'bg-blue-50' : ''}>
+                              <TableCell>
+                                <Checkbox
+                                  checked={selectedDocuments.includes(document.id)}
+                                  onCheckedChange={(checked) => 
+                                    handleDocumentSelect(document.id, checked as boolean)
+                                  }
+                                />
+                              </TableCell>
+                              <TableCell className="font-mono text-blue-600">
+                                {document.name}
+                              </TableCell>
+                              <TableCell>
+                                {document.planType && (
+                                  <Badge variant="outline">{document.planType}</Badge>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={document.egwp === 'Yes' ? 'default' : 'secondary'}>
+                                  {document.egwp}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="font-mono">
+                                {document.folderName}
+                              </TableCell>
+                              <TableCell className="font-mono">
+                                {document.folderVersion}
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
                       </TableBody>
                     </Table>
                   </div>
