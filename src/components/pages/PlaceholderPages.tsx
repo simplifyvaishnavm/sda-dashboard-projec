@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple, Users } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple, Users, Link } from "@phosphor-icons/react"
 
 // QueuedCollateral component implementation
 function QueuedCollateral() {
@@ -1270,7 +1270,13 @@ function CollaborateMain() {
     collaborators: '',
     productLink: '',
     reviewSummary: '',
-    reviewersInvolved: ''
+    reviewersInvolved: '',
+    queuedBy: '',
+    queuedDate: '',
+    totalReviewCount: '',
+    draftableCompare: '',
+    updateStatus: '',
+    emailStatus: ''
   })
   
   // Column visibility state
@@ -1287,7 +1293,13 @@ function CollaborateMain() {
     collaborators: true,
     productLink: true,
     reviewSummary: true,
-    reviewersInvolved: true
+    reviewersInvolved: true,
+    queuedBy: true,
+    queuedDate: true,
+    totalReviewCount: true,
+    draftableCompare: true,
+    updateStatus: true,
+    emailStatus: true
   })
   
   // Sample data based on the screenshot
@@ -1305,7 +1317,13 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'prashant kur...'
+      reviewersInvolved: 'Vishal Bergire,Varadharajan R',
+      queuedBy: 'Vishal Bergire',
+      queuedDate: '05/29/2025 08:57:47',
+      totalReviewCount: '1 out of 2',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '13148',
@@ -1320,7 +1338,13 @@ function CollaborateMain() {
       collaborators: '1.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'prashant kur...'
+      reviewersInvolved: 'Elaine Warnecke, Leuryn Bledsoe',
+      queuedBy: 'Vishal Bergire',
+      queuedDate: '05/29/2025 08:57:25',
+      totalReviewCount: '0 out of 4',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '13146',
@@ -1335,7 +1359,13 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'vaibhav kharat'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:05:20',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '13119',
@@ -1350,7 +1380,13 @@ function CollaborateMain() {
       collaborators: '1.00',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'akshay desh...'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:04:37',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '13100',
@@ -1365,7 +1401,13 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'bgail'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:04:33',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '12901',
@@ -1380,7 +1422,13 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'neha shirastav...'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:03:41',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '12900',
@@ -1395,7 +1443,13 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'neha shirastav...'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:03:37',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '12969',
@@ -1410,7 +1464,13 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'neha shirastav...'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:03:34',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     },
     {
       id: '12968',
@@ -1425,22 +1485,13 @@ function CollaborateMain() {
       collaborators: '0.01',
       productLink: '🔗',
       reviewSummary: '',
-      reviewersInvolved: 'neha shirastav...'
-    },
-    {
-      id: '12967',
-      collateralType: 'Medicare EOC',
-      fontType: 'Regular',
-      productName: 'H4801021000',
-      folderName: 'INDV_H4801-021_Blue Cross Medicare Advantage Dental',
-      effectiveDate: '01/01/2026',
-      version: '2026_0.01',
-      workflowStage: 'Ready For Review',
-      estimatedDate: '05/15/2025',
-      collaborators: '0.01',
-      productLink: '🔗',
-      reviewSummary: '',
-      reviewersInvolved: 'neha shirastav...'
+      reviewersInvolved: 'ram agarwal,Chad Carpenter ...',
+      queuedBy: 'ram.agarwal',
+      queuedDate: '08/25/2024 14:03:30',
+      totalReviewCount: '0 out of 8',
+      draftableCompare: '🔗',
+      updateStatus: 'Update',
+      emailStatus: '👁'
     }
   ]
   
@@ -1458,7 +1509,13 @@ function CollaborateMain() {
     { key: 'collaborators', label: 'Collaborators' },
     { key: 'productLink', label: 'Product Link' },
     { key: 'reviewSummary', label: 'Review Summary' },
-    { key: 'reviewersInvolved', label: 'Reviewers Involved' }
+    { key: 'reviewersInvolved', label: 'Reviewers Involved' },
+    { key: 'queuedBy', label: 'Queued By' },
+    { key: 'queuedDate', label: 'Queued Date' },
+    { key: 'totalReviewCount', label: 'Total Review Count' },
+    { key: 'draftableCompare', label: 'Draftable Compare' },
+    { key: 'updateStatus', label: 'Update Status' },
+    { key: 'emailStatus', label: 'Email Status' }
   ]
   
   // Filter and sort data
@@ -1499,6 +1556,18 @@ function CollaborateMain() {
         return false
       }
       if (columnFilters.reviewersInvolved && !item.reviewersInvolved.toLowerCase().includes(columnFilters.reviewersInvolved.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.queuedBy && !item.queuedBy.toLowerCase().includes(columnFilters.queuedBy.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.queuedDate && !item.queuedDate.toLowerCase().includes(columnFilters.queuedDate.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.totalReviewCount && !item.totalReviewCount.toLowerCase().includes(columnFilters.totalReviewCount.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.updateStatus && !item.updateStatus.toLowerCase().includes(columnFilters.updateStatus.toLowerCase())) {
         return false
       }
       
@@ -1781,6 +1850,56 @@ function CollaborateMain() {
                       </div>
                     </TableHead>
                   )}
+                  {visibleColumns.queuedBy && (
+                    <TableHead className="border-r h-11 min-w-[120px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedBy')}>
+                        Queued By
+                        {sortField === 'queuedBy' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedDate && (
+                    <TableHead className="border-r h-11 min-w-[160px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedDate')}>
+                        Queued Date
+                        {sortField === 'queuedDate' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.totalReviewCount && (
+                    <TableHead className="border-r h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('totalReviewCount')}>
+                        Total Review Count
+                        {sortField === 'totalReviewCount' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.draftableCompare && (
+                    <TableHead className="border-r h-11 min-w-[140px] text-center">
+                      Draftable Compare
+                    </TableHead>
+                  )}
+                  {visibleColumns.updateStatus && (
+                    <TableHead className="border-r h-11 min-w-[120px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('updateStatus')}>
+                        Update Status
+                        {sortField === 'updateStatus' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.emailStatus && (
+                    <TableHead className="h-11 min-w-[110px] text-center">
+                      Email Status
+                    </TableHead>
+                  )}
                 </TableRow>
 
                 {/* Filter Row */}
@@ -2057,6 +2176,104 @@ function CollaborateMain() {
                       </div>
                     </TableHead>
                   )}
+                  {visibleColumns.queuedBy && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.queuedBy}
+                          onChange={(e) => updateColumnFilter('queuedBy', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.queuedBy && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('queuedBy')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedDate && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.queuedDate}
+                          onChange={(e) => updateColumnFilter('queuedDate', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.queuedDate && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('queuedDate')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.totalReviewCount && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.totalReviewCount}
+                          onChange={(e) => updateColumnFilter('totalReviewCount', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.totalReviewCount && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('totalReviewCount')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.draftableCompare && (
+                    <TableHead className="p-2 border-r">
+                      {/* Empty for Draftable Compare column */}
+                    </TableHead>
+                  )}
+                  {visibleColumns.updateStatus && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.updateStatus}
+                          onChange={(e) => updateColumnFilter('updateStatus', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.updateStatus && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('updateStatus')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.emailStatus && (
+                    <TableHead className="p-2">
+                      {/* Empty for Email Status column */}
+                    </TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -2148,7 +2365,7 @@ function CollaborateMain() {
                       {visibleColumns.productLink && (
                         <TableCell className="border-r p-3 text-center">
                           <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="View Product">
-                            🔗
+                            <Link size={16} />
                           </Button>
                         </TableCell>
                       )}
@@ -2162,6 +2379,44 @@ function CollaborateMain() {
                       {visibleColumns.reviewersInvolved && (
                         <TableCell className="border-r p-3 text-sm max-w-40 truncate" title={item.reviewersInvolved}>
                           {item.reviewersInvolved}
+                        </TableCell>
+                      )}
+                      {visibleColumns.queuedBy && (
+                        <TableCell className="border-r p-3 text-sm">
+                          {item.queuedBy}
+                        </TableCell>
+                      )}
+                      {visibleColumns.queuedDate && (
+                        <TableCell className="border-r p-3 text-sm font-mono">
+                          {item.queuedDate}
+                        </TableCell>
+                      )}
+                      {visibleColumns.totalReviewCount && (
+                        <TableCell className="border-r p-3 text-sm text-center">
+                          <Badge variant="outline" className="text-xs">
+                            {item.totalReviewCount}
+                          </Badge>
+                        </TableCell>
+                      )}
+                      {visibleColumns.draftableCompare && (
+                        <TableCell className="border-r p-3 text-center">
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="View Draftable Compare">
+                            <Link size={16} />
+                          </Button>
+                        </TableCell>
+                      )}
+                      {visibleColumns.updateStatus && (
+                        <TableCell className="border-r p-3 text-center">
+                          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-blue-600 hover:bg-blue-50" title="Update Status">
+                            {item.updateStatus}
+                          </Button>
+                        </TableCell>
+                      )}
+                      {visibleColumns.emailStatus && (
+                        <TableCell className="p-3 text-center">
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-600 hover:bg-gray-50" title="Email Status">
+                            <Eye size={16} />
+                          </Button>
                         </TableCell>
                       )}
                     </TableRow>
