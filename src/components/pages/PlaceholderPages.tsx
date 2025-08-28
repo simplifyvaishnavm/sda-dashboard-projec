@@ -1272,9 +1272,7 @@ function CollaborateMain() {
     reviewSummary: '',
     previousVersion: '',
     assignedTo: '',
-    reviewersInvolved: '',
-    queuedSI: '',
-    queuedProcess: ''
+    reviewersInvolved: ''
   })
   
   // Column visibility state
@@ -1293,9 +1291,7 @@ function CollaborateMain() {
     reviewSummary: true,
     previousVersion: true,
     assignedTo: true,
-    reviewersInvolved: true,
-    queuedSI: true,
-    queuedProcess: true
+    reviewersInvolved: true
   })
   
   // Sample data based on the screenshot
@@ -1315,9 +1311,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'prashant kumar',
       assignedTo: 'prashant kumar akshay deshmukh',
-      reviewersInvolved: 'prashant kur...',
-      queuedSI: '05/29/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'prashant kur...'
     },
     {
       id: '13148',
@@ -1334,9 +1328,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'prashant kumar',
       assignedTo: 'prashant kumar',
-      reviewersInvolved: 'prashant kur...',
-      queuedSI: '05/26/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'prashant kur...'
     },
     {
       id: '13146',
@@ -1353,9 +1345,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'vaibhav kharat',
       assignedTo: 'vaibhav kharat akshay deshmukh',
-      reviewersInvolved: 'vaibhav kharat',
-      queuedSI: '05/26/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'vaibhav kharat'
     },
     {
       id: '13119',
@@ -1372,9 +1362,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'vaibhav kharat akshay...',
       assignedTo: 'vaibhav kharat akshay deshmukh',
-      reviewersInvolved: 'akshay desh...',
-      queuedSI: '05/23/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'akshay desh...'
     },
     {
       id: '13100',
@@ -1391,9 +1379,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'bgail',
       assignedTo: 'neha shirastava bigail',
-      reviewersInvolved: 'bgail',
-      queuedSI: '05/22/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'bgail'
     },
     {
       id: '12901',
@@ -1410,9 +1396,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'neha shirastava',
       assignedTo: 'neha shirastava',
-      reviewersInvolved: 'neha shirastav...',
-      queuedSI: '05/15/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'neha shirastav...'
     },
     {
       id: '12900',
@@ -1429,9 +1413,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'neha shirastava',
       assignedTo: 'neha shirastava',
-      reviewersInvolved: 'neha shirastav...',
-      queuedSI: '05/15/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'neha shirastav...'
     },
     {
       id: '12969',
@@ -1448,9 +1430,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'neha shirastava',
       assignedTo: 'neha shirastava',
-      reviewersInvolved: 'neha shirastav...',
-      queuedSI: '05/15/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'neha shirastav...'
     },
     {
       id: '12968',
@@ -1467,9 +1447,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'neha shirastava',
       assignedTo: 'neha shirastava',
-      reviewersInvolved: 'neha shirastav...',
-      queuedSI: '05/15/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'neha shirastav...'
     },
     {
       id: '12967',
@@ -1486,9 +1464,7 @@ function CollaborateMain() {
       reviewSummary: '',
       previousVersion: 'neha shirastava',
       assignedTo: 'neha shirastava',
-      reviewersInvolved: 'neha shirastav...',
-      queuedSI: '05/15/2025',
-      queuedProcess: ''
+      reviewersInvolved: 'neha shirastav...'
     }
   ]
   
@@ -1508,9 +1484,7 @@ function CollaborateMain() {
     { key: 'reviewSummary', label: 'Review Summary' },
     { key: 'previousVersion', label: 'Previous Version' },
     { key: 'assignedTo', label: 'Assigned To' },
-    { key: 'reviewersInvolved', label: 'Reviewers Involved' },
-    { key: 'queuedSI', label: 'Queued SI' },
-    { key: 'queuedProcess', label: 'Queued Process' }
+    { key: 'reviewersInvolved', label: 'Reviewers Involved' }
   ]
   
   // Filter and sort data
@@ -1557,12 +1531,6 @@ function CollaborateMain() {
         return false
       }
       if (columnFilters.reviewersInvolved && !item.reviewersInvolved.toLowerCase().includes(columnFilters.reviewersInvolved.toLowerCase())) {
-        return false
-      }
-      if (columnFilters.queuedSI && !item.queuedSI.toLowerCase().includes(columnFilters.queuedSI.toLowerCase())) {
-        return false
-      }
-      if (columnFilters.queuedProcess && !item.queuedProcess.toLowerCase().includes(columnFilters.queuedProcess.toLowerCase())) {
         return false
       }
       
@@ -1860,26 +1828,6 @@ function CollaborateMain() {
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('reviewersInvolved')}>
                         Reviewers Involved
                         {sortField === 'reviewersInvolved' && (
-                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.queuedSI && (
-                    <TableHead className="border-r h-11 min-w-[120px]">
-                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedSI')}>
-                        Queued SI
-                        {sortField === 'queuedSI' && (
-                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.queuedProcess && (
-                    <TableHead className="h-11 min-w-[140px]">
-                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedProcess')}>
-                        Queued Process
-                        {sortField === 'queuedProcess' && (
                           sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                         )}
                       </div>
@@ -2205,50 +2153,6 @@ function CollaborateMain() {
                       </div>
                     </TableHead>
                   )}
-                  {visibleColumns.queuedSI && (
-                    <TableHead className="p-2 border-r">
-                      <div className="relative">
-                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          value={columnFilters.queuedSI}
-                          onChange={(e) => updateColumnFilter('queuedSI', e.target.value)}
-                          className="pl-9 h-8 text-sm"
-                        />
-                        {columnFilters.queuedSI && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                            onClick={() => clearColumnFilter('queuedSI')}
-                          >
-                            <X size={12} />
-                          </Button>
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.queuedProcess && (
-                    <TableHead className="p-2">
-                      <div className="relative">
-                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          value={columnFilters.queuedProcess}
-                          onChange={(e) => updateColumnFilter('queuedProcess', e.target.value)}
-                          className="pl-9 h-8 text-sm"
-                        />
-                        {columnFilters.queuedProcess && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                            onClick={() => clearColumnFilter('queuedProcess')}
-                          >
-                            <X size={12} />
-                          </Button>
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -2364,18 +2268,6 @@ function CollaborateMain() {
                       {visibleColumns.reviewersInvolved && (
                         <TableCell className="border-r p-3 text-sm max-w-40 truncate" title={item.reviewersInvolved}>
                           {item.reviewersInvolved}
-                        </TableCell>
-                      )}
-                      {visibleColumns.queuedSI && (
-                        <TableCell className="border-r p-3 text-sm font-mono">
-                          {item.queuedSI}
-                        </TableCell>
-                      )}
-                      {visibleColumns.queuedProcess && (
-                        <TableCell className="p-3 text-sm">
-                          {item.queuedProcess || (
-                            <span className="text-muted-foreground italic">—</span>
-                          )}
                         </TableCell>
                       )}
                     </TableRow>
