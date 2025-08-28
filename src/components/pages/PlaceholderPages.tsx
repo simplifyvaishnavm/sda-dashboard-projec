@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple } from "@phosphor-icons/react"
+import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple, Users } from "@phosphor-icons/react"
 
 // QueuedCollateral component implementation
 function QueuedCollateral() {
@@ -1248,18 +1248,1312 @@ export function MasterList() {
   )
 }
 
-export function Collaborate() {
+// Collaborate component with tabbed interface
+function CollaborateMain() {
+  const [sortField, setSortField] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [selectedRows, setSelectedRows] = useKV('collaborate-selected-rows', [] as string[])
+  
+  // Column filters for search
+  const [columnFilters, setColumnFilters] = useState({
+    id: '',
+    collateralType: '',
+    fontType: '',
+    productName: '',
+    folderName: '',
+    effectiveDate: '',
+    version: '',
+    workflowStage: '',
+    estimatedDate: '',
+    collaborators: '',
+    productLink: '',
+    reviewSummary: '',
+    previousVersion: '',
+    assignedTo: '',
+    reviewersInvolved: '',
+    queuedSI: '',
+    queuedProcess: ''
+  })
+  
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useKV('collaborate-visible-columns', {
+    id: true,
+    collateralType: true,
+    fontType: true,
+    productName: true,
+    folderName: true,
+    effectiveDate: true,
+    version: true,
+    workflowStage: true,
+    estimatedDate: true,
+    collaborators: true,
+    productLink: true,
+    reviewSummary: true,
+    previousVersion: true,
+    assignedTo: true,
+    reviewersInvolved: true,
+    queuedSI: true,
+    queuedProcess: true
+  })
+  
+  // Sample data based on the screenshot
+  const collaborateData = [
+    {
+      id: '13148',
+      collateralType: 'Medicare ANOC',
+      fontType: 'Regular',
+      productName: 'H4801015000',
+      folderName: 'Term_H4801-015_Blue Cross Medicare Advantage Saver Plus',
+      effectiveDate: '01/01/2026',
+      version: '2025_0.02',
+      workflowStage: 'ML Updates In Progress',
+      estimatedDate: '06/06/2025',
+      collaborators: '1.00',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'prashant kumar',
+      assignedTo: 'prashant kumar akshay deshmukh',
+      reviewersInvolved: 'prashant kur...',
+      queuedSI: '05/29/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '13148',
+      collateralType: 'Medicare ANOC',
+      fontType: 'Regular',
+      productName: 'H4801014000',
+      folderName: 'Term_H4801-014_Blue Cross Medicare Advantage Flex (PPO)',
+      effectiveDate: '01/01/2026',
+      version: '2025_1.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '06/06/2025',
+      collaborators: '1.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'prashant kumar',
+      assignedTo: 'prashant kumar',
+      reviewersInvolved: 'prashant kur...',
+      queuedSI: '05/26/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '13146',
+      collateralType: 'Medicare ANOC',
+      fontType: 'Regular',
+      productName: 'H9790010000',
+      folderName: 'INDV_H9790-010_Blue Cross Medicare Advantage Basic',
+      effectiveDate: '01/01/2026',
+      version: '2026_2.02',
+      workflowStage: 'Updates Ready',
+      estimatedDate: '06/02/2025',
+      collaborators: '1.00',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'vaibhav kharat',
+      assignedTo: 'vaibhav kharat akshay deshmukh',
+      reviewersInvolved: 'vaibhav kharat',
+      queuedSI: '05/26/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '13119',
+      collateralType: 'Medicare ANOC',
+      fontType: 'Regular',
+      productName: 'H1666014000',
+      folderName: 'INDV_H1666-014_Blue Cross Medicare Advantage Health',
+      effectiveDate: '01/01/2026',
+      version: '2026_2.02',
+      workflowStage: 'Review Completed',
+      estimatedDate: '05/26/2025',
+      collaborators: '1.00',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'vaibhav kharat akshay...',
+      assignedTo: 'vaibhav kharat akshay deshmukh',
+      reviewersInvolved: 'akshay desh...',
+      queuedSI: '05/23/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '13100',
+      collateralType: 'Medicare ANOC',
+      fontType: 'Regular',
+      productName: 'S5715015000',
+      folderName: 'Group_S5715-015',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/22/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'bgail',
+      assignedTo: 'neha shirastava bigail',
+      reviewersInvolved: 'bgail',
+      queuedSI: '05/22/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '12901',
+      collateralType: 'Medicare EOC',
+      fontType: 'Regular',
+      productName: 'H8554004000',
+      folderName: 'INDV_H8554-004_Blue Cross Medicare Advantage Saver',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/15/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'neha shirastava',
+      assignedTo: 'neha shirastava',
+      reviewersInvolved: 'neha shirastav...',
+      queuedSI: '05/15/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '12900',
+      collateralType: 'Medicare EOC',
+      fontType: 'Regular',
+      productName: 'H8634004000',
+      folderName: 'Term_INDV_H8634-004_Blue Cross Medicare Advantage',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/15/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'neha shirastava',
+      assignedTo: 'neha shirastava',
+      reviewersInvolved: 'neha shirastav...',
+      queuedSI: '05/15/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '12969',
+      collateralType: 'Medicare EOC',
+      fontType: 'Regular',
+      productName: 'H1666018000',
+      folderName: 'INDV_H1666-018_Blue Cross Medicare Advantage Health',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/15/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'neha shirastava',
+      assignedTo: 'neha shirastava',
+      reviewersInvolved: 'neha shirastav...',
+      queuedSI: '05/15/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '12968',
+      collateralType: 'Medicare EOC',
+      fontType: 'Regular',
+      productName: 'H4801022000',
+      folderName: 'INDV_H4801-022_Blue Cross Medicare Advantage Health',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/15/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'neha shirastava',
+      assignedTo: 'neha shirastava',
+      reviewersInvolved: 'neha shirastav...',
+      queuedSI: '05/15/2025',
+      queuedProcess: ''
+    },
+    {
+      id: '12967',
+      collateralType: 'Medicare EOC',
+      fontType: 'Regular',
+      productName: 'H4801021000',
+      folderName: 'INDV_H4801-021_Blue Cross Medicare Advantage Dental',
+      effectiveDate: '01/01/2026',
+      version: '2026_0.01',
+      workflowStage: 'Ready For Review',
+      estimatedDate: '05/15/2025',
+      collaborators: '0.01',
+      productLink: '🔗',
+      reviewSummary: '',
+      previousVersion: 'neha shirastava',
+      assignedTo: 'neha shirastava',
+      reviewersInvolved: 'neha shirastav...',
+      queuedSI: '05/15/2025',
+      queuedProcess: ''
+    }
+  ]
+  
+  // Available columns configuration
+  const availableColumns = [
+    { key: 'id', label: 'Id' },
+    { key: 'collateralType', label: 'Collateral Type' },
+    { key: 'fontType', label: 'Font Type' },
+    { key: 'productName', label: 'Product Name' },
+    { key: 'folderName', label: 'Folder Name' },
+    { key: 'effectiveDate', label: 'Effective Date' },
+    { key: 'version', label: 'Version' },
+    { key: 'workflowStage', label: 'Workflow Stage' },
+    { key: 'estimatedDate', label: 'Estimated Completion' },
+    { key: 'collaborators', label: 'Collaborators' },
+    { key: 'productLink', label: 'Product Link' },
+    { key: 'reviewSummary', label: 'Review Summary' },
+    { key: 'previousVersion', label: 'Previous Version' },
+    { key: 'assignedTo', label: 'Assigned To' },
+    { key: 'reviewersInvolved', label: 'Reviewers Involved' },
+    { key: 'queuedSI', label: 'Queued SI' },
+    { key: 'queuedProcess', label: 'Queued Process' }
+  ]
+  
+  // Filter and sort data
+  const filteredAndSortedData = useMemo(() => {
+    let filtered = collaborateData.filter(item => {
+      // Apply column filters
+      if (columnFilters.id && !item.id.toLowerCase().includes(columnFilters.id.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.collateralType && !item.collateralType.toLowerCase().includes(columnFilters.collateralType.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.fontType && !item.fontType.toLowerCase().includes(columnFilters.fontType.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.productName && !item.productName.toLowerCase().includes(columnFilters.productName.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.folderName && !item.folderName.toLowerCase().includes(columnFilters.folderName.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.effectiveDate && !item.effectiveDate.toLowerCase().includes(columnFilters.effectiveDate.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.version && !item.version.toLowerCase().includes(columnFilters.version.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.workflowStage && !item.workflowStage.toLowerCase().includes(columnFilters.workflowStage.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.estimatedDate && !item.estimatedDate.toLowerCase().includes(columnFilters.estimatedDate.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.collaborators && !item.collaborators.toLowerCase().includes(columnFilters.collaborators.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.reviewSummary && !item.reviewSummary.toLowerCase().includes(columnFilters.reviewSummary.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.previousVersion && !item.previousVersion.toLowerCase().includes(columnFilters.previousVersion.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.assignedTo && !item.assignedTo.toLowerCase().includes(columnFilters.assignedTo.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.reviewersInvolved && !item.reviewersInvolved.toLowerCase().includes(columnFilters.reviewersInvolved.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.queuedSI && !item.queuedSI.toLowerCase().includes(columnFilters.queuedSI.toLowerCase())) {
+        return false
+      }
+      if (columnFilters.queuedProcess && !item.queuedProcess.toLowerCase().includes(columnFilters.queuedProcess.toLowerCase())) {
+        return false
+      }
+      
+      return true
+    })
+    
+    if (sortField) {
+      filtered.sort((a, b) => {
+        const aValue = a[sortField as keyof typeof a] || ''
+        const bValue = b[sortField as keyof typeof b] || ''
+        
+        if (sortDirection === 'asc') {
+          return aValue.toString().localeCompare(bValue.toString())
+        } else {
+          return bValue.toString().localeCompare(aValue.toString())
+        }
+      })
+    }
+    
+    return filtered
+  }, [collaborateData, sortField, sortDirection, columnFilters])
+  
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredAndSortedData.length / pageSize)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
+  
+  // Reset to page 1 when sort or filters change
+  useMemo(() => {
+    setCurrentPage(1)
+  }, [sortField, sortDirection, columnFilters])
+  
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+  
+  const handleRowSelect = (rowId: string, checked: boolean) => {
+    setSelectedRows((current: string[]) => 
+      checked ? [...current, rowId] : current.filter(id => id !== rowId)
+    )
+  }
+  
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allVisibleIds = currentPageData.map(item => item.id)
+      setSelectedRows((current: string[]) => {
+        const newSet = new Set([...current, ...allVisibleIds])
+        return Array.from(newSet)
+      })
+    } else {
+      const visibleIds = new Set(currentPageData.map(item => item.id))
+      setSelectedRows((current: string[]) => 
+        current.filter(id => !visibleIds.has(id))
+      )
+    }
+  }
+  
+  const updateColumnFilter = (column: string, value: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: value
+    }))
+  }
+  
+  const clearColumnFilter = (column: string) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [column]: ''
+    }))
+  }
+  
+  const toggleColumnVisibility = (columnKey: string) => {
+    setVisibleColumns((current: any) => ({
+      ...current,
+      [columnKey]: !current[columnKey]
+    }))
+  }
+  
+  const isAllVisibleSelected = currentPageData.length > 0 && 
+    currentPageData.every(item => selectedRows.includes(item.id))
+  
+  const isSomeVisibleSelected = currentPageData.some(item => selectedRows.includes(item.id))
+  
+  const getStatusColor = (stage: string) => {
+    switch (stage) {
+      case 'ML Updates In Progress':
+        return 'bg-blue-100 text-blue-800 border-blue-300'
+      case 'Ready For Review':
+        return 'bg-orange-100 text-orange-800 border-orange-300'
+      case 'Updates Ready':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+      case 'Review Completed':
+        return 'bg-green-100 text-green-800 border-green-300'
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-300'
+    }
+  }
+  
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Collaborate</h1>
-          <p className="text-muted-foreground mt-1">Work together on documents</p>
+    <div className="space-y-4">
+      {/* Actions and Column Controls */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          {filteredAndSortedData.length} items total
+          {selectedRows.length > 0 && (
+            <Badge variant="secondary" className="ml-3">
+              {selectedRows.length} selected
+            </Badge>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="flex items-center gap-2 h-9">
+                <Columns size={16} />
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              {availableColumns.map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.key}
+                  checked={visibleColumns[column.key]}
+                  onCheckedChange={() => toggleColumnVisibility(column.key)}
+                >
+                  {column.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-      <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">Collaboration features coming soon...</p>
+      
+      {/* Data Grid */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="border rounded-lg">
+            <Table>
+              <TableHeader>
+                {/* Column Headers with Sort */}
+                <TableRow className="bg-muted/30">
+                  <TableHead className="w-12 border-r h-11">
+                    <Checkbox
+                      checked={isAllVisibleSelected}
+                      onCheckedChange={handleSelectAll}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isSomeVisibleSelected && !isAllVisibleSelected
+                      }}
+                    />
+                  </TableHead>
+                  {visibleColumns.id && (
+                    <TableHead className="border-r h-11 min-w-[80px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('id')}>
+                        Id
+                        {sortField === 'id' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.collateralType && (
+                    <TableHead className="border-r h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('collateralType')}>
+                        Collateral Type
+                        {sortField === 'collateralType' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.fontType && (
+                    <TableHead className="border-r h-11 min-w-[100px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('fontType')}>
+                        Font Type
+                        {sortField === 'fontType' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.productName && (
+                    <TableHead className="border-r h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('productName')}>
+                        Product Name
+                        {sortField === 'productName' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.folderName && (
+                    <TableHead className="border-r h-11 min-w-[250px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('folderName')}>
+                        Folder Name
+                        {sortField === 'folderName' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.effectiveDate && (
+                    <TableHead className="border-r h-11 min-w-[130px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('effectiveDate')}>
+                        Effective Date
+                        {sortField === 'effectiveDate' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.version && (
+                    <TableHead className="border-r h-11 min-w-[100px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('version')}>
+                        Version
+                        {sortField === 'version' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.workflowStage && (
+                    <TableHead className="border-r h-11 min-w-[160px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('workflowStage')}>
+                        Workflow Stage
+                        {sortField === 'workflowStage' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.estimatedDate && (
+                    <TableHead className="border-r h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('estimatedDate')}>
+                        Estimated Completion
+                        {sortField === 'estimatedDate' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.collaborators && (
+                    <TableHead className="border-r h-11 min-w-[120px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('collaborators')}>
+                        Collaborators
+                        {sortField === 'collaborators' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.productLink && (
+                    <TableHead className="border-r h-11 min-w-[100px] text-center">
+                      Product Link
+                    </TableHead>
+                  )}
+                  {visibleColumns.reviewSummary && (
+                    <TableHead className="border-r h-11 min-w-[120px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('reviewSummary')}>
+                        Review Summary
+                        {sortField === 'reviewSummary' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.previousVersion && (
+                    <TableHead className="border-r h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('previousVersion')}>
+                        Previous Version
+                        {sortField === 'previousVersion' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.assignedTo && (
+                    <TableHead className="border-r h-11 min-w-[180px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('assignedTo')}>
+                        Assigned To
+                        {sortField === 'assignedTo' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.reviewersInvolved && (
+                    <TableHead className="border-r h-11 min-w-[160px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('reviewersInvolved')}>
+                        Reviewers Involved
+                        {sortField === 'reviewersInvolved' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedSI && (
+                    <TableHead className="border-r h-11 min-w-[120px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedSI')}>
+                        Queued SI
+                        {sortField === 'queuedSI' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedProcess && (
+                    <TableHead className="h-11 min-w-[140px]">
+                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('queuedProcess')}>
+                        Queued Process
+                        {sortField === 'queuedProcess' && (
+                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                </TableRow>
+
+                {/* Filter Row */}
+                <TableRow className="bg-white border-b-2">
+                  <TableHead className="p-2 border-r">
+                    {/* Empty cell for checkbox column */}
+                  </TableHead>
+                  {visibleColumns.id && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.id}
+                          onChange={(e) => updateColumnFilter('id', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.id && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('id')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.collateralType && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.collateralType}
+                          onChange={(e) => updateColumnFilter('collateralType', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.collateralType && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('collateralType')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.fontType && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.fontType}
+                          onChange={(e) => updateColumnFilter('fontType', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.fontType && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('fontType')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.productName && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.productName}
+                          onChange={(e) => updateColumnFilter('productName', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.productName && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('productName')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.folderName && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.folderName}
+                          onChange={(e) => updateColumnFilter('folderName', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.folderName && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('folderName')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.effectiveDate && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.effectiveDate}
+                          onChange={(e) => updateColumnFilter('effectiveDate', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.effectiveDate && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('effectiveDate')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.version && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.version}
+                          onChange={(e) => updateColumnFilter('version', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.version && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('version')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.workflowStage && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.workflowStage}
+                          onChange={(e) => updateColumnFilter('workflowStage', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.workflowStage && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('workflowStage')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.estimatedDate && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.estimatedDate}
+                          onChange={(e) => updateColumnFilter('estimatedDate', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.estimatedDate && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('estimatedDate')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.collaborators && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.collaborators}
+                          onChange={(e) => updateColumnFilter('collaborators', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.collaborators && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('collaborators')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.productLink && (
+                    <TableHead className="p-2 border-r">
+                      {/* Empty for Product Link column */}
+                    </TableHead>
+                  )}
+                  {visibleColumns.reviewSummary && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.reviewSummary}
+                          onChange={(e) => updateColumnFilter('reviewSummary', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.reviewSummary && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('reviewSummary')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.previousVersion && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.previousVersion}
+                          onChange={(e) => updateColumnFilter('previousVersion', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.previousVersion && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('previousVersion')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.assignedTo && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.assignedTo}
+                          onChange={(e) => updateColumnFilter('assignedTo', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.assignedTo && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('assignedTo')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.reviewersInvolved && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.reviewersInvolved}
+                          onChange={(e) => updateColumnFilter('reviewersInvolved', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.reviewersInvolved && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('reviewersInvolved')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedSI && (
+                    <TableHead className="p-2 border-r">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.queuedSI}
+                          onChange={(e) => updateColumnFilter('queuedSI', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.queuedSI && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('queuedSI')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                  {visibleColumns.queuedProcess && (
+                    <TableHead className="p-2">
+                      <div className="relative">
+                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          value={columnFilters.queuedProcess}
+                          onChange={(e) => updateColumnFilter('queuedProcess', e.target.value)}
+                          className="pl-9 h-8 text-sm"
+                        />
+                        {columnFilters.queuedProcess && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            onClick={() => clearColumnFilter('queuedProcess')}
+                          >
+                            <X size={12} />
+                          </Button>
+                        )}
+                      </div>
+                    </TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentPageData.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={Object.values(visibleColumns).filter(Boolean).length + 1} className="text-center py-8 text-muted-foreground">
+                      {Object.values(columnFilters).some(filter => filter !== '') 
+                        ? "No items match the current filters" 
+                        : "No collaboration items available"
+                      }
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  currentPageData.map((item, index) => (
+                    <TableRow 
+                      key={`${item.id}-${index}`} 
+                      className={`
+                        ${selectedRows.includes(`${item.id}-${index}`+2) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
+                        ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
+                        border-b transition-colors h-12
+                      `}
+                    >
+                      <TableCell className="border-r p-3">
+                        <Checkbox
+                          checked={selectedRows.includes(`${item.id}-${index}`)}
+                          onCheckedChange={(checked) => 
+                            handleRowSelect(`${item.id}-${index}`, checked as boolean)
+                          }
+                        />
+                      </TableCell>
+                      {visibleColumns.id && (
+                        <TableCell className="font-mono text-blue-600 font-medium border-r p-3 text-sm">
+                          {item.id}
+                        </TableCell>
+                      )}
+                      {visibleColumns.collateralType && (
+                        <TableCell className="border-r p-3">
+                          <Badge variant="outline" className="text-xs font-medium">
+                            {item.collateralType}
+                          </Badge>
+                        </TableCell>
+                      )}
+                      {visibleColumns.fontType && (
+                        <TableCell className="border-r p-3">
+                          <Badge variant="secondary" className="text-xs">
+                            {item.fontType}
+                          </Badge>
+                        </TableCell>
+                      )}
+                      {visibleColumns.productName && (
+                        <TableCell className="border-r p-3 text-sm font-mono">
+                          {item.productName}
+                        </TableCell>
+                      )}
+                      {visibleColumns.folderName && (
+                        <TableCell className="border-r p-3 text-sm max-w-64 truncate" title={item.folderName}>
+                          {item.folderName}
+                        </TableCell>
+                      )}
+                      {visibleColumns.effectiveDate && (
+                        <TableCell className="border-r p-3 text-sm font-mono">
+                          {item.effectiveDate}
+                        </TableCell>
+                      )}
+                      {visibleColumns.version && (
+                        <TableCell className="border-r p-3">
+                          <Badge variant="outline" className="font-mono text-xs">
+                            {item.version}
+                          </Badge>
+                        </TableCell>
+                      )}
+                      {visibleColumns.workflowStage && (
+                        <TableCell className="border-r p-3">
+                          <Badge className={`text-xs font-medium ${getStatusColor(item.workflowStage)}`}>
+                            {item.workflowStage}
+                          </Badge>
+                        </TableCell>
+                      )}
+                      {visibleColumns.estimatedDate && (
+                        <TableCell className="border-r p-3 text-sm font-mono">
+                          {item.estimatedDate}
+                        </TableCell>
+                      )}
+                      {visibleColumns.collaborators && (
+                        <TableCell className="border-r p-3 text-sm font-mono text-center">
+                          {item.collaborators}
+                        </TableCell>
+                      )}
+                      {visibleColumns.productLink && (
+                        <TableCell className="border-r p-3 text-center">
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="View Product">
+                            🔗
+                          </Button>
+                        </TableCell>
+                      )}
+                      {visibleColumns.reviewSummary && (
+                        <TableCell className="border-r p-3 text-sm">
+                          {item.reviewSummary || (
+                            <span className="text-muted-foreground italic">—</span>
+                          )}
+                        </TableCell>
+                      )}
+                      {visibleColumns.previousVersion && (
+                        <TableCell className="border-r p-3 text-sm max-w-36 truncate" title={item.previousVersion}>
+                          {item.previousVersion}
+                        </TableCell>
+                      )}
+                      {visibleColumns.assignedTo && (
+                        <TableCell className="border-r p-3 text-sm max-w-44 truncate" title={item.assignedTo}>
+                          {item.assignedTo}
+                        </TableCell>
+                      )}
+                      {visibleColumns.reviewersInvolved && (
+                        <TableCell className="border-r p-3 text-sm max-w-40 truncate" title={item.reviewersInvolved}>
+                          {item.reviewersInvolved}
+                        </TableCell>
+                      )}
+                      {visibleColumns.queuedSI && (
+                        <TableCell className="border-r p-3 text-sm font-mono">
+                          {item.queuedSI}
+                        </TableCell>
+                      )}
+                      {visibleColumns.queuedProcess && (
+                        <TableCell className="p-3 text-sm">
+                          {item.queuedProcess || (
+                            <span className="text-muted-foreground italic">—</span>
+                          )}
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          
+          {/* Enhanced Pagination Controls */}
+          <div className="flex items-center justify-between mt-4 px-4 pb-4 text-sm text-muted-foreground border-t bg-muted/20">
+            <div className="flex items-center gap-4">
+              <span className="font-medium">
+                {startIndex + 1} to {Math.min(endIndex, filteredAndSortedData.length)} of {filteredAndSortedData.length}
+                {collaborateData.length !== filteredAndSortedData.length && (
+                  <span className="text-blue-600 font-medium">
+                    {' '}(filtered from {collaborateData.length} total)
+                  </span>
+                )}
+              </span>
+              {selectedRows.length > 0 && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  {selectedRows.length} selected
+                </Badge>
+              )}
+            </div>
+            
+            {totalPages > 1 && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm">Page</span>
+                <Select value={currentPage.toString()} onValueChange={(value) => setCurrentPage(parseInt(value))}>
+                  <SelectTrigger className="w-16 h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <SelectItem key={i + 1} value={(i + 1).toString()}>
+                        {i + 1}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span className="text-sm">of {totalPages}</span>
+                
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="h-8 w-8 p-0"
+                  >
+                    <CaretLeft size={14} />
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="h-8 w-8 p-0"
+                  >
+                    <CaretRight size={14} />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+function LogsTab() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Activity Logs</CardTitle>
+        <CardDescription>
+          Track all system activity and user actions
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">
+          Activity logs and audit trail will be displayed here.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function UserManagementTab() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>User Management</CardTitle>
+        <CardDescription>
+          Manage user accounts, permissions, and access levels
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">
+          User management interface will be implemented here.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function VisualDashboardTab() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Visual Dashboard</CardTitle>
+        <CardDescription>
+          Analytics and insights for collaboration workflows
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">
+          Charts, graphs, and visual analytics will be displayed here.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+
+export function Collaborate() {
+  const [currentTab, setCurrentTab] = useState('collaborate')
+
+  return (
+    <div className="p-4">
+      <div className="mb-4">
+        <h1 className="text-2xl font-semibold text-foreground mb-2">
+          Collaborate
+        </h1>
+        <p className="text-muted-foreground">
+          Work together on documents and track progress
+        </p>
       </div>
+
+      <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="collaborate" className="flex items-center gap-2">
+            <FileText size={16} />
+            Collaborate
+          </TabsTrigger>
+          <TabsTrigger value="logs" className="flex items-center gap-2">
+            <Clock size={16} />
+            Logs
+          </TabsTrigger>
+          <TabsTrigger value="user-management" className="flex items-center gap-2">
+            <Users size={16} />
+            User Management
+          </TabsTrigger>
+          <TabsTrigger value="visual-dashboard" className="flex items-center gap-2">
+            <BarChart3 size={16} />
+            Visual Dashboard
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="collaborate" className="mt-4">
+          <CollaborateMain />
+        </TabsContent>
+        
+        <TabsContent value="logs" className="mt-4">
+          <LogsTab />
+        </TabsContent>
+        
+        <TabsContent value="user-management" className="mt-4">
+          <UserManagementTab />
+        </TabsContent>
+        
+        <TabsContent value="visual-dashboard" className="mt-4">
+          <VisualDashboardTab />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
