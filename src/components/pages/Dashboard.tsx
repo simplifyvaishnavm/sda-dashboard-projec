@@ -105,7 +105,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   ]
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
@@ -118,21 +118,21 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       </div>
 
       {/* Quick Navigation Tiles */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {navigationTiles.map((tile) => {
           const IconComponent = tile.icon
           return (
             <Card 
               key={tile.id}
-              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${tile.bgHover} group`}
+              className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg ${tile.bgHover} group min-h-[120px]`}
               onClick={() => onNavigate?.(tile.id)}
             >
-              <CardContent className="p-4 text-center">
-                <div className={`w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br ${tile.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                  <IconComponent size={20} className={tile.iconColor} weight="duotone" />
+              <CardContent className="p-4 text-center h-full flex flex-col justify-center">
+                <div className={`w-12 h-12 mx-auto mb-3 rounded-lg bg-gradient-to-br ${tile.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                  <IconComponent size={24} className={tile.iconColor} weight="duotone" />
                 </div>
-                <h3 className="font-semibold text-sm mb-1">{tile.title}</h3>
-                <p className="text-xs text-muted-foreground">{tile.description}</p>
+                <h3 className="font-semibold text-sm mb-1 leading-tight">{tile.title}</h3>
+                <p className="text-xs text-muted-foreground leading-tight">{tile.description}</p>
               </CardContent>
             </Card>
           )
@@ -140,35 +140,35 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="h-20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+        <Card className="min-h-[100px]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-1">
-            <div className="text-lg font-bold">4 new</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">4 new</div>
             <p className="text-xs text-muted-foreground">Latest updates</p>
           </CardContent>
         </Card>
         
-        <Card className="h-20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+        <Card className="min-h-[100px]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Documents</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-1">
-            <div className="text-lg font-bold">247</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">247</div>
             <p className="text-xs text-muted-foreground">+12% from last month</p>
           </CardContent>
         </Card>
         
-        <Card className="h-20">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+        <Card className="min-h-[100px]">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Documents Generated</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-1">
-            <div className="text-lg font-bold">89</div>
+          <CardContent className="pt-0">
+            <div className="text-2xl font-bold">89</div>
             <p className="text-xs text-muted-foreground">+15 this month</p>
           </CardContent>
         </Card>
