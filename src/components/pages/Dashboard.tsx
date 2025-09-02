@@ -1,12 +1,53 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plus, FileText, Users, TrendingUp, FolderOpen, FilePdf, ShareNetwork, Robot, PaintBrush } from '@phosphor-icons/react'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { useState } from 'react'
+import { Plus, FileText, Users, TrendingUp, FolderOpen, FilePdf, ShareNetwork, Robot, PaintBrush, ArrowsClockwise, Eye, Calendar, Funnel, CaretDown } from '@phosphor-icons/react'
 
 interface DashboardProps {
   onNavigate?: (page: string) => void
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const [selectedTaskFilter, setSelectedTaskFilter] = useState('open')
+
+  // Mock task data
+  const mockTasks = [
+    {
+      id: 1,
+      taskNumber: 'T001',
+      folder: 'EOC Documents',
+      effectiveDate: '01/15/2024',
+      workflow: 'Review',
+      state: 'In Progress',
+      plan: 'Medicare Advantage',
+      planName: 'MA Plan 2024',
+      planType: 'HMO',
+      view: 'PDF',
+      task: 'Content Review',
+      status: 'Active',
+      starred: false
+    },
+    {
+      id: 2,
+      taskNumber: 'T002',
+      folder: 'SBC Templates',
+      effectiveDate: '02/01/2024',
+      workflow: 'Approval',
+      state: 'Pending',
+      plan: 'Individual',
+      planName: 'Silver Plan',
+      planType: 'PPO',
+      view: 'HTML',
+      task: 'Final Review',
+      status: 'Waiting',
+      starred: true
+    }
+  ]
+
   const navigationTiles = [
     {
       id: 'master-list',
@@ -113,6 +154,148 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Work Queue Task Manager */}
+      <Card className="mt-6">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <CardTitle className="text-lg font-medium">Work Queue (0)</CardTitle>
+              <div className="flex items-center gap-4">
+                <RadioGroup value={selectedTaskFilter} onValueChange={setSelectedTaskFilter} className="flex items-center gap-6">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="open" id="open" />
+                    <Label htmlFor="open" className="text-sm font-normal">Open Tasks (0)</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="completed" id="completed" />
+                    <Label htmlFor="completed" className="text-sm font-normal">Completed Tasks (0)</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="all" id="all" />
+                    <Label htmlFor="all" className="text-sm font-normal">All Tasks (0)</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <ArrowsClockwise className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Calendar className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Funnel className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          {/* Task Table */}
+          <div className="border-t">
+            {/* Table Header */}
+            <div className="grid grid-cols-12 gap-2 p-2 bg-muted/50 border-b text-xs font-medium">
+              <div className="col-span-1 px-2 py-1 text-left">Task #</div>
+              <div className="col-span-1 px-2 py-1 text-left">Folder</div>
+              <div className="col-span-1 px-2 py-1 text-left">Effective Date</div>
+              <div className="col-span-1 px-2 py-1 text-left">Workflow</div>
+              <div className="col-span-1 px-2 py-1 text-left">State</div>
+              <div className="col-span-1 px-2 py-1 text-left">Plan</div>
+              <div className="col-span-1 px-2 py-1 text-left">PlanName</div>
+              <div className="col-span-1 px-2 py-1 text-left">PlanType</div>
+              <div className="col-span-1 px-2 py-1 text-left">View</div>
+              <div className="col-span-1 px-2 py-1 text-left">Task</div>
+              <div className="col-span-1 px-2 py-1 text-left">Status</div>
+              <div className="col-span-1 px-2 py-1 text-left">Star</div>
+            </div>
+
+            {/* Filter Row */}
+            <div className="grid grid-cols-12 gap-2 p-2 bg-white border-b">
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="m/d/yyyy" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <div className="col-span-1 px-2">
+                <div className="flex items-center gap-1">
+                  <Input className="h-6 text-xs" placeholder="" />
+                  <CaretDown className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+            </div>
+
+            {/* Empty State */}
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="text-sm text-muted-foreground">No Rows To Show</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
