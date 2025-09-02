@@ -169,7 +169,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         
         <Card className="min-h-[100px]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Collaboration Completed</CardTitle>
+            <CardTitle className="text-sm font-medium">Collaborate Completed</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent className="pt-0">
