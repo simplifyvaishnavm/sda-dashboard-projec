@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -405,7 +405,7 @@ function QueuedCollateral() {
   const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
   
   // Reset to page 1 when sort or filters change
-  useMemo(() => {
+  React.useEffect(() => {
     setCurrentPage(1)
   }, [sortField, sortDirection, columnFilters])
   
@@ -1597,7 +1597,7 @@ function CollaborateMain() {
   const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
   
   // Reset to page 1 when sort or filters change
-  useMemo(() => {
+  React.useEffect(() => {
     setCurrentPage(1)
   }, [sortField, sortDirection, columnFilters])
   
@@ -2291,7 +2291,7 @@ function CollaborateMain() {
                     <TableRow 
                       key={`${item.id}-${index}`} 
                       className={`
-                        ${selectedRows.includes(`${item.id}-${index}`+2) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
+                        ${selectedRows.includes(`${item.id}-${index}`) ? 'bg-blue-50 border-blue-200' : 'hover:bg-muted/30'}
                         ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}
                         border-b transition-colors h-12
                       `}
@@ -2686,7 +2686,7 @@ function LogsTab() {
   const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
   
   // Reset to page 1 when sort or filters change
-  useMemo(() => {
+  React.useEffect(() => {
     setCurrentPage(1)
   }, [sortField, sortDirection, columnFilters])
   
@@ -3195,7 +3195,7 @@ function UserManagementTab() {
   const currentPageData = filteredAndSortedData.slice(startIndex, endIndex)
   
   // Reset to page 1 when sort or filters change
-  useMemo(() => {
+  React.useEffect(() => {
     setCurrentPage(1)
   }, [sortField, sortDirection, columnFilters])
   
@@ -3735,7 +3735,7 @@ export function Generate() {
   const currentPageDocuments = filteredAndSortedDocuments.slice(startIndex, endIndex)
   
   // Reset to page 1 when sort or filters change
-  useMemo(() => {
+  React.useEffect(() => {
     setCurrentPage(1)
   }, [sortField, sortDirection, columnFilters])
   
