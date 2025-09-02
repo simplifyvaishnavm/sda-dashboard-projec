@@ -90,7 +90,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         })}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Documents</CardTitle>
@@ -104,72 +104,12 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Collaborators</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground">+3 new this week</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Documents Published</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">32</div>
             <p className="text-xs text-muted-foreground">+8 this month</p>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Documents</CardTitle>
-            <CardDescription>Your recently accessed documents</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {[
-                { name: 'Product Requirements - Q4 2024', updated: '2 hours ago', status: 'Draft' },
-                { name: 'Marketing Strategy Proposal', updated: '1 day ago', status: 'Review' },
-                { name: 'Technical Architecture Guide', updated: '3 days ago', status: 'Published' },
-              ].map((doc, index) => (
-                <div key={index} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-                  <div>
-                    <p className="font-medium text-sm">{doc.name}</p>
-                    <p className="text-xs text-muted-foreground">{doc.updated}</p>
-                  </div>
-                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">
-                    {doc.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Collaboration Activity</CardTitle>
-            <CardDescription>Recent team activity</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {[
-                { action: 'Sarah commented on "Marketing Strategy"', time: '30 mins ago' },
-                { action: 'John published "Tech Guide v2.1"', time: '2 hours ago' },
-                { action: 'Team review completed for "Q4 Planning"', time: '4 hours ago' },
-              ].map((activity, index) => (
-                <div key={index} className="p-2 rounded-lg bg-muted/30">
-                  <p className="font-medium text-sm">{activity.action}</p>
-                  <p className="text-xs text-muted-foreground">{activity.time}</p>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
       </div>
