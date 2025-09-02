@@ -1232,17 +1232,17 @@ function QueuedCollateral() {
   )
 }
 
-export function MasterList() {
+export function Publish() {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Master List</h1>
-          <p className="text-muted-foreground mt-1">Manage all your documents</p>
+          <h1 className="text-2xl font-semibold text-foreground">Publish</h1>
+          <p className="text-muted-foreground mt-1">Share and distribute documents</p>
         </div>
       </div>
       <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">Master List functionality coming soon...</p>
+        <p className="text-muted-foreground">Publishing features coming soon...</p>
       </div>
     </div>
   )
@@ -4376,50 +4376,3 @@ export function Publish() {
   )
 }
 
-export function AskBenny() {
-  return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Ask Benny</h1>
-          <p className="text-muted-foreground mt-1">Your AI assistant for document help</p>
-        </div>
-      </div>
-      <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">AI assistant coming soon...</p>
-      </div>
-    </div>
-  )
-}
-
-export function AdminSettings() {
-  return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Admin Settings</h1>
-          <p className="text-muted-foreground mt-1">Manage system configuration</p>
-        </div>
-      </div>
-      <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">Admin settings coming soon...</p>
-      </div>
-    </div>
-  )
-}
-
-export function DesignStudio() {
-  return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Design Studio</h1>
-          <p className="text-muted-foreground mt-1">Create and manage templates</p>
-        </div>
-      </div>
-      <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">Design studio coming soon...</p>
-      </div>
-    </div>
-  )
-}
