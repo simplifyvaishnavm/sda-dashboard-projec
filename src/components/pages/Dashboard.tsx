@@ -106,15 +106,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Welcome back to SimplifyDocs</p>
-        </div>
-        <Button className="gap-2">
-          <Plus size={16} />
-          New Document
-        </Button>
+      <div>
+        <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Welcome back to SimplifyDocs</p>
       </div>
 
       {/* Quick Navigation Tiles */}
