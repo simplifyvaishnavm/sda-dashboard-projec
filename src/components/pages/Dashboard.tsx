@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { useState } from 'react'
-import { Plus, FileText, Users, TrendingUp, FolderOpen, FilePdf, ShareNetwork, Robot, PaintBrush, ArrowsClockwise, Eye, Calendar, Funnel, CaretDown } from '@phosphor-icons/react'
+import { Plus, FileText, Users, TrendingUp, FolderOpen, FilePdf, ShareNetwork, Robot, PaintBrush, ArrowsClockwise, Eye, Calendar, Funnel, CaretDown, Clock } from '@phosphor-icons/react'
 
 interface DashboardProps {
   onNavigate?: (page: string) => void
@@ -13,6 +13,14 @@ interface DashboardProps {
 
 export function Dashboard({ onNavigate }: DashboardProps) {
   const [selectedTaskFilter, setSelectedTaskFilter] = useState('open')
+
+  // Mock recent activity data
+  const recentActivities = [
+    { action: 'Document generated', item: 'Medicare Plan SBC', time: '2 minutes ago' },
+    { action: 'Review completed', item: 'EOC Template', time: '15 minutes ago' },
+    { action: 'Published to portal', item: 'EGWP Documents', time: '1 hour ago' },
+    { action: 'Collaboration started', item: 'Annual Notice', time: '2 hours ago' }
+  ]
 
   // Mock task data
   const mockTasks = [
@@ -131,7 +139,24 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         })}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {recentActivities.slice(0, 3).map((activity, index) => (
+              <div key={index} className="flex flex-col space-y-1">
+                <div className="text-sm font-medium">{activity.action}</div>
+                <div className="text-xs text-muted-foreground">{activity.item}</div>
+                <div className="text-xs text-muted-foreground">{activity.time}</div>
+                {index < 2 && <div className="border-b border-border my-1" />}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+        
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Documents</CardTitle>
