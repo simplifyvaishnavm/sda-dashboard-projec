@@ -4358,21 +4358,66 @@ export function Generate() {
   )
 }
 
-
-
-export function Publish() {
+export function MasterList() {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Publish</h1>
-          <p className="text-muted-foreground mt-1">Share and distribute documents</p>
+          <h1 className="text-2xl font-semibold text-foreground">Master List</h1>
+          <p className="text-muted-foreground mt-1">Manage collateral content</p>
         </div>
       </div>
       <div className="bg-card rounded-lg border border-border p-8 text-center">
-        <p className="text-muted-foreground">Publishing features coming soon...</p>
+        <p className="text-muted-foreground">Master list features coming soon...</p>
       </div>
     </div>
   )
 }
 
+export function AdminSettings() {
+  return (
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Admin Settings</h1>
+          <p className="text-muted-foreground mt-1">Configure system settings</p>
+        </div>
+      </div>
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
+        <p className="text-muted-foreground">Admin settings coming soon...</p>
+      </div>
+    </div>
+  )
+}
+
+export function DesignStudio() {
+  return (
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Design Studio</h1>
+          <p className="text-muted-foreground mt-1">Design and customize documents</p>
+        </div>
+      </div>
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
+        <p className="text-muted-foreground">Design studio features coming soon...</p>
+      </div>
+    </div>
+  )
+}
+
+export function AskBenny() {
+  return (
+    <div className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Ask Benny</h1>
+          <p className="text-muted-foreground mt-1">AI assistant for document questions</p>
+        </div>
+      </div>
+      <div className="bg-card rounded-lg border border-border p-8 text-center">
+        <p className="text-muted-foreground">Ask Benny features coming soon...</p>
+      </div>
+    </div>
+  )
+}
