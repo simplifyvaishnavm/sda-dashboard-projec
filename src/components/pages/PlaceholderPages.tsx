@@ -11,6 +11,76 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { FileText, Clock, BarChart3, X, CaretUp, CaretDown, CaretLeft, CaretRight, Columns, MagnifyingGlass, Funnel, Download, Eye, Gear, ArrowUp, ArrowDown, ArrowClockwise, Queue, WarningCircle, UploadSimple, Users, Link } from "@phosphor-icons/react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+
+// JSON Popup Component
+function JsonViewerPopup() {
+  const [isOpen, setIsOpen] = useState(false)
+  
+  // Updated sample JSON data with new structure based on your requirements
+  const sampleJsonData = `{
+  "Languages": [{
+    "LanguageName": "English",
+    "Content": "Healthy food and utilities are eligible expenses only for enrollees with a qualifying condition such as diabetes, cardiovascular disorders, chronic heart failure, chronic kidney disease and/or chronic high cholesterol."
+  }, {
+    "LanguageName": "Spanish", 
+    "Content": "Los alimentos saludables y servicios públicos son gastos elegibles solo para afiliados con condiciones que califiquen como diabetes, trastornos cardiovasculares, insuficiencia cardíaca crónica, enfermedad renal crónica y/o colesterol alto crónico."
+  }, {
+    "LanguageName": "Chinese",
+    "Content": "健康食品和公用事业只对有合格病症的参保人员是合格费用，如糖尿病、心血管疾病、慢性心力衰竭、慢性肾病和/或慢性高胆固醇。"
+  }],
+  "Counties": [{
+    "CountyName": "St. Croix",
+    "FipsCode": "**",
+    "PartialInd": "N"
+  }, {
+    "CountyName": "St. John-St. Thomas",
+    "FipsCode": "**", 
+    "PartialInd": "N"
+  }],
+  "Status": "Insert",
+  "ApprovedDateTime": "2025-07-29T13:09:48"
+}`
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-7 px-2 text-xs text-green-800 bg-green-100 border-green-300 hover:bg-green-200"
+          onClick={() => setIsOpen(true)}
+        >
+          Insert
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[80vh]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            Publish JSON
+          </DialogTitle>
+          <DialogDescription>
+            View JSON data for this record
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex-1 min-h-0">
+          <Textarea
+            readOnly
+            value={sampleJsonData}
+            className="min-h-[400px] font-mono text-sm resize-none"
+            style={{ whiteSpace: 'pre-wrap' }}
+          />
+        </div>
+        <div className="flex justify-end pt-4">
+          <Button onClick={() => setIsOpen(false)}>
+            Close
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 // QueuedCollateral component implementation
 function QueuedCollateral() {
@@ -2225,9 +2295,7 @@ export function Publish() {
                       )}
                       {visibleColumns.jsonData && (
                         <TableCell className="border-r p-3 text-center">
-                          <Badge variant="default" className="bg-green-100 text-green-800 border-green-300 text-xs font-medium">
-                            {item.jsonData}
-                          </Badge>
+                          <JsonViewerPopup />
                         </TableCell>
                       )}
                       {visibleColumns.isPublished && (
