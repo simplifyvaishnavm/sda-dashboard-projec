@@ -1245,8 +1245,8 @@ export function Publish() {
     ruleId: '',
     rowVersionId: '',
     contractNumber: '',
-    benefitType: '',
-    benefitCategory: '',
+    benefitType: '--select-one--',
+    benefitCategory: '--select-one--',
     businessArea: 'Portals',
     subBusinessArea: '--Select One--',
     jsonCreatedDateFrom: '',
@@ -1590,8 +1590,8 @@ export function Publish() {
       ruleId: '',
       rowVersionId: '',
       contractNumber: '',
-      benefitType: '',
-      benefitCategory: '',
+      benefitType: '--select-one--',
+      benefitCategory: '--select-one--',
       businessArea: 'Portals',
       subBusinessArea: '--Select One--',
       jsonCreatedDateFrom: '',
@@ -1675,7 +1675,7 @@ export function Publish() {
                     <SelectValue placeholder="--Select One--" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">--Select One--</SelectItem>
+                    <SelectItem value="--select-one--">--Select One--</SelectItem>
                     <SelectItem value="otc-and-vbid-food">OTC and VBID Food Allowance</SelectItem>
                     <SelectItem value="otc-debit-card">OTC Items - Debit Card</SelectItem>
                     <SelectItem value="medical">Medical</SelectItem>
@@ -1693,7 +1693,7 @@ export function Publish() {
                     <SelectValue placeholder="--Select One--" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">--Select One--</SelectItem>
+                    <SelectItem value="--select-one--">--Select One--</SelectItem>
                     <SelectItem value="medical">Medical</SelectItem>
                     <SelectItem value="pharmacy">Pharmacy</SelectItem>
                   </SelectContent>
