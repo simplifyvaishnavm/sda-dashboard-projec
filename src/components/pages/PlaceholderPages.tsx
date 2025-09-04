@@ -1264,8 +1264,7 @@ export function Publish() {
     subBusinessArea: '',
     createdOn: '',
     jsonData: '',
-    isPublished: '',
-    isConsumed: ''
+    isPublished: ''
   })
   
   // Column visibility state
@@ -1280,7 +1279,6 @@ export function Publish() {
     createdOn: true,
     jsonData: true,
     isPublished: true,
-    isConsumed: true,
     downloadJs: true
   })
   
@@ -1297,8 +1295,7 @@ export function Publish() {
       subBusinessArea: 'Claims Processing Module',
       createdOn: '2025-08-20 10:04:18',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782390',
@@ -1311,8 +1308,7 @@ export function Publish() {
       subBusinessArea: 'Claims Processing Module',
       createdOn: '2025-08-20 10:04:18',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782389',
@@ -1325,8 +1321,7 @@ export function Publish() {
       subBusinessArea: 'Claims Processing Module',
       createdOn: '2025-08-20 10:04:18',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782388',
@@ -1339,8 +1334,7 @@ export function Publish() {
       subBusinessArea: 'Claims Processing Module',
       createdOn: '2025-08-20 10:04:18',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782387',
@@ -1353,8 +1347,7 @@ export function Publish() {
       subBusinessArea: 'Member Portal Enhancement',
       createdOn: '2025-08-20 10:03:38',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782386',
@@ -1367,8 +1360,7 @@ export function Publish() {
       subBusinessArea: 'Member Portal Enhancement',
       createdOn: '2025-08-20 10:03:38',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782385',
@@ -1381,8 +1373,7 @@ export function Publish() {
       subBusinessArea: 'Provider Directory System',
       createdOn: '2025-08-20 10:03:38',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782384',
@@ -1395,8 +1386,7 @@ export function Publish() {
       subBusinessArea: 'Provider Directory System',
       createdOn: '2025-08-20 10:03:38',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782383',
@@ -1409,8 +1399,7 @@ export function Publish() {
       subBusinessArea: 'Provider Directory System',
       createdOn: '2025-08-20 09:56:24',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782382',
@@ -1423,8 +1412,7 @@ export function Publish() {
       subBusinessArea: 'Provider Directory System',
       createdOn: '2025-08-20 09:56:24',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     },
     {
       id: '35782381',
@@ -1437,8 +1425,7 @@ export function Publish() {
       subBusinessArea: 'Benefits Administration',
       createdOn: '2025-08-20 09:55:54',
       jsonData: 'Insert',
-      isPublished: 'Yes',
-      isConsumed: 'No'
+      isPublished: 'Yes'
     }
   ]
   
@@ -1454,7 +1441,6 @@ export function Publish() {
     { key: 'createdOn', label: 'Created On' },
     { key: 'jsonData', label: 'JsonData' },
     { key: 'isPublished', label: 'IsPublished' },
-    { key: 'isConsumed', label: 'IsConsumed' },
     { key: 'downloadJs', label: 'Download JS...' }
   ]
   
@@ -1490,9 +1476,6 @@ export function Publish() {
         return false
       }
       if (columnFilters.isPublished && !item.isPublished.toLowerCase().includes(columnFilters.isPublished.toLowerCase())) {
-        return false
-      }
-      if (columnFilters.isConsumed && !item.isConsumed.toLowerCase().includes(columnFilters.isConsumed.toLowerCase())) {
         return false
       }
       
@@ -1772,20 +1755,17 @@ export function Publish() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h3 className="text-lg font-medium">Publish Audit</h3>
-          <Button variant="link" className="text-blue-600 underline p-0 h-auto">
-            Show More
-          </Button>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Refresh data">
               <ArrowClockwise size={14} />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Download audit data">
               <Download size={14} />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Move up">
               <ArrowUp size={14} />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Move down">
               <ArrowDown size={14} />
             </Button>
           </div>
@@ -1929,16 +1909,6 @@ export function Publish() {
                       <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('isPublished')}>
                         IsPublished
                         {sortField === 'isPublished' && (
-                          sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
-                  {visibleColumns.isConsumed && (
-                    <TableHead className="border-r h-12 min-w-[110px]">
-                      <div className="flex items-center gap-1 cursor-pointer select-none font-semibold" onClick={() => handleSort('isConsumed')}>
-                        IsConsumed
-                        {sortField === 'isConsumed' && (
                           sortDirection === 'asc' ? <CaretUp size={12} /> : <CaretDown size={12} />
                         )}
                       </div>
@@ -2176,28 +2146,6 @@ export function Publish() {
                       </div>
                     </TableHead>
                   )}
-                  {visibleColumns.isConsumed && (
-                    <TableHead className="p-2 border-r">
-                      <div className="relative">
-                        <MagnifyingGlass size={14} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          value={columnFilters.isConsumed}
-                          onChange={(e) => updateColumnFilter('isConsumed', e.target.value)}
-                          className="pl-9 h-8 text-sm"
-                        />
-                        {columnFilters.isConsumed && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
-                            onClick={() => clearColumnFilter('isConsumed')}
-                          >
-                            <X size={12} />
-                          </Button>
-                        )}
-                      </div>
-                    </TableHead>
-                  )}
                   {visibleColumns.downloadJs && (
                     <TableHead className="p-2">
                       {/* Empty for Download JS column */}
@@ -2292,26 +2240,16 @@ export function Publish() {
                           </Badge>
                         </TableCell>
                       )}
-                      {visibleColumns.isConsumed && (
-                        <TableCell className="border-r p-3 text-center">
-                          <Badge 
-                            variant={item.isConsumed === 'Yes' ? 'default' : 'secondary'}
-                            className={`text-xs font-medium ${item.isConsumed === 'No' ? 'bg-red-100 text-red-800 border-red-300' : ''}`}
-                          >
-                            {item.isConsumed}
-                          </Badge>
-                        </TableCell>
-                      )}
                       {visibleColumns.downloadJs && (
                         <TableCell className="p-3 text-center">
                           <div className="flex items-center justify-center gap-1">
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="Download">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-blue-600 hover:bg-blue-50" title="Download JSON">
                               <Download size={14} />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-orange-600 hover:bg-orange-50" title="View">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-orange-600 hover:bg-orange-50" title="View details">
                               <ArrowUp size={14} />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-orange-600 hover:bg-orange-50" title="Export">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-orange-600 hover:bg-orange-50" title="Export data">
                               <ArrowDown size={14} />
                             </Button>
                           </div>
